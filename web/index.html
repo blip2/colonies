@@ -1,0 +1,32 @@
+<html lang="en" >
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body ng-app="DotsandBoxes" ng-controller="segments">
+    <div class="container">
+
+    <div ng-repeat="row in ['A','B','C','D']">
+        <div class="row row-horiz">
+          <div class="seg-horiz" id="horiz-{{row}}-{{ col }}" ng-repeat="col in [1,2,3,4,5,6,7]"></div>
+        </div>
+          <div class="row"><div class="seg-vert" id="vert-{{row}}-0"></div><div class="block-wrapper" ng-repeat="col in [1,2,3,4,5,6,7]"><div class="block" id="block-{{row}}-{{col}}"></div><div class="seg-vert" id="vert-{{row}}-{{col}}"></div></div>
+        </div>
+      </div>
+
+      <div class="row row-horiz" ng-repeat="row in ['E']">
+        <div class="block-wrapper" ng-repeat="col in [1,2,3,4,5,6,7]"><div class="seg-horiz" id="horiz-{{row}}-{{ col }}"></div></div>
+      </div>
+    </div> <!-- /container -->
+
+  <script src="js/angular.min.js"></script>
+
+  <script type="text/javascript">
+  var app = angular.module("DotsandBoxes", []);
+    app.controller("segments", function($scope) {
+
+    });
+  </script>
+
+</body>
+</html>
