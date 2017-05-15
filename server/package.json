@@ -1,0 +1,16 @@
+{
+  "name": "dotsandboxes-server",
+  "version": "0.1.0",
+  "description": "dots and boxes server",
+  "dependencies": {
+    "angular": "^1.6.4",
+    "angular-animate": "^1.6.4",
+    "angular-aria": "^1.6.4",
+    "angular-material": "^1.1.4",
+    "express": "^4.15.2",
+    "md-color-picker": "^0.2.6",
+    "request": "^2.81.0",
+    "request-promise-lite": "^0.8.1",
+    "socket.io": "^2.0.1"
+  }
+}

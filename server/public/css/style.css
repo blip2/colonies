@@ -1,11 +1,12 @@
 body {
-    background: black;
+    background: #333333;
 }
 
 .container {
     margin-top: 50px;
     width: 1000px;
     margin: 50px auto;
+    background: #222222;
 }
 
 .block-wrapper {
@@ -13,11 +14,10 @@ body {
     float: none;
 }
 
-.block {
+.seg-block {
     display: inline-block;
     width: 120px;
     height: 120px;
-    background: #222222;
     float: none;
 }
 
@@ -25,16 +25,14 @@ body {
     display: inline-block;
     width: 120px;
     height: 20px;
-    background: yellow;
     float: none;
-    border-right: 20px solid #222222;
+    border-left: 20px solid #222222;
 }
 
 .seg-vert {
     display: inline-block;
     width: 20px;
     height: 120px;
-    background: green;
     float: none;
 }
 
