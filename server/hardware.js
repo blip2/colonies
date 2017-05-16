@@ -1,3 +1,7 @@
+// dots and boxes installation
+// server interface
+// Ben Hussey - May 2017
+
 // Controller IPs defined here
 var CONTROLLER_1 = "192.168.240.1"
 var CONTROLLER_2 = "192.168.240.2"

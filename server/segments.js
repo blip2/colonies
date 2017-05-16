@@ -1,3 +1,7 @@
+// dots and boxes installation
+// server interface
+// Ben Hussey - May 2017
+
 var request = require('request-promise-lite')
 var hardware = require('./hardware');
 var segments = [];
@@ -63,7 +67,8 @@ function update_segment(segment) {
              seg.col == segment.col;
     })[0];
     if (hw) {
-        var url = 'http://' + hw.ip + '/arduino/' + hw.strip + '/' + hw.seq + '/' + segment.color
+        var url = 'http://' + hw.ip + '/arduino/segment/' + hw.strip + '/' + hw.seq + '/' + segment.color.replace('#','') + '/'
+        console.log(url);
         request.get(url);
     };
 }

@@ -3,7 +3,7 @@
   Written for Arduino Yún
   
   Valid API commands:
-  "/arduino/segment/X/Y/H"
+  "/arduino/segment/X/Y/#RRGGBB/"
   "/arduino/fade/X/Y/HHSSVV/HHSSVV/t" (WIP)
   "/arduino/pixel/X/Y/Z/HHSSVV" (WIP)
   where H, X, Y, Z are integers
@@ -70,7 +70,9 @@ void process(BridgeClient client) {
 }
 
 void segmentCommand(BridgeClient client) {
-  int x, y, hue;
+  int x, y;
+  String color;
+  char hex[6];
 
   // Read parameters
   x = client.parseInt();
@@ -78,7 +80,8 @@ void segmentCommand(BridgeClient client) {
     y = client.parseInt();
   }
   if (client.read() == '/') {
-    hue = client.parseInt();
+    color = client.readStringUntil('/');
+    color.toCharArray(hex, 6);
   }
 
   // TODO: Implement fade
@@ -86,11 +89,11 @@ void segmentCommand(BridgeClient client) {
   client.print(start);
   for (int i=start; i < start+SEGMENT_LEN; i++){
     client.print(i);
-    leds[x][i].setHue(hue);
+    leds[x][i] = strtoul(hex, 0, 16);
   }
   FastLED.show(); 
   client.print(F("Colour read as "));
-  client.print(hue);
+  client.print(color);
 
 }
 

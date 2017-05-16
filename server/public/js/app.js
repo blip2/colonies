@@ -1,3 +1,7 @@
+// dots and boxes installation
+// client interface
+// Ben Hussey - May 2017
+
 'use strict';
 
 // Declare app level module which depends on filters, and services
