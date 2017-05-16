@@ -14,6 +14,8 @@ function all_segments(clear=false) {
     // Return all segments if they exist already
     if (segments.length > 0 && !clear) {
         return segments;
+    } else {
+        segments = [];
     }
 
     var i = 0;
