@@ -1,0 +1,41 @@
+body {
+    background: #333333;
+}
+
+.container {
+    margin-top: 50px;
+    width: 1000px;
+    margin: 50px auto;
+    background: #222222;
+}
+
+.block-wrapper {
+    display: inline;
+    float: none;
+}
+
+.seg-block {
+    display: inline-block;
+    width: 120px;
+    height: 120px;
+    float: none;
+}
+
+.seg-horiz {
+    display: inline-block;
+    width: 120px;
+    height: 20px;
+    float: none;
+    border-left: 20px solid #222222;
+}
+
+.seg-vert {
+    display: inline-block;
+    width: 20px;
+    height: 120px;
+    float: none;
+}
+
+.row-horiz {
+    border-left: 20px solid #222222;
+}
