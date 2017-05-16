@@ -1,7 +1,7 @@
 /*
   Dots and Boxes Segment Controller
   Written for Arduino Yún
-  
+
   Valid API commands:
   "/arduino/segment/X/Y/#RRGGBB/"
   "/arduino/fade/X/Y/HHSSVV/HHSSVV/t" (WIP)
@@ -41,7 +41,7 @@ void setup() {
   FastLED.addLeds<LED_TYPE, 8>(leds[2], NUM_LEDS);
   FastLED.addLeds<LED_TYPE, 9>(leds[2], NUM_LEDS);
   FastLED.addLeds<LED_TYPE, 10>(leds[2], NUM_LEDS);
-  
+
   Bridge.begin();
   server.listenOnLocalhost();
   server.begin();
@@ -63,10 +63,10 @@ void process(BridgeClient client) {
   }
   /* if (command == "fade") {
     fadeCommand(client);
-  }
-  if (command == "pixel") {
+    }
+    if (command == "pixel") {
     pixelCommand(client);
-  } */
+    } */
 }
 
 void segmentCommand(BridgeClient client) {
@@ -87,13 +87,20 @@ void segmentCommand(BridgeClient client) {
   // TODO: Implement fade
   int start = y * SEGMENT_LEN;
   client.print(start);
-  for (int i=start; i < start+SEGMENT_LEN; i++){
-    client.print(i);
+  for (int i = start; i < start + SEGMENT_LEN; i++) {
+    client.print(i
     leds[x][i] = strtoul(hex, 0, 16);
+//     if (hue == 0) {
+//       leds[x][i] = CRGB::Black;
+//     }
+//     else
+//       leds[x][i].setHue(hue);
+// >>>>>>> master
   }
-  FastLED.show(); 
+  FastLED.show();
   client.print(F("Colour read as "));
   client.print(color);
 
 }
+
 
