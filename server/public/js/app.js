@@ -30,7 +30,10 @@ var app = angular.module('DotsandBoxes', [
 
 app.controller('segments', function ($scope, $filter, socket) {
 
-  $scope.color = "#FF0000";
+  var player = 1;
+  $scope.mode = "normal";
+  $scope.player1 = "#FF0000";
+  $scope.player2 = "#0000FF";
 
   socket.on('segments', function (data) {
     $scope.segments = data;
@@ -40,6 +43,10 @@ app.controller('segments', function ($scope, $filter, socket) {
     $scope.update_segment(data);
   });
 
+  socket.on('mode', function (value) {
+    $scope.mode = value;
+  });
+
   $scope.update_segment = function(segment) {
     var found = $filter('getById')($scope.segments, segment.id);
     var index = $scope.segments.indexOf(found);
@@ -47,10 +54,37 @@ app.controller('segments', function ($scope, $filter, socket) {
   };
 
   $scope.segmentClick = function(segment) {
-    if (segment.type != 'block') {
-      segment.color = $scope.color;
-      socket.emit('segment-change', segment)
+    if ($scope.mode == "game") {
+      if (segment.type != 'block' && segment.color == '#000000') {
+        if (player == 1) {
+          segment.color = $scope.player1;
+          player = 2;
+        } else {
+          segment.color = $scope.player2;
+          player = 1;
+        }
+        socket.emit('segment-change', segment);
+      }
+    } else {
+      if (segment.type != 'block') {
+        segment.color = $scope.player1;
+        socket.emit('segment-change', segment);
+      };
+    };
+  };
+
+  $scope.modeSwitch = function() {
+    if ($scope.mode == "game") {
+      $scope.mode = "normal";
+    } else {
+      $scope.mode = "game";
+      $scope.reset();
     }
+    socket.emit('mode', $scope.mode);
+  }
+
+  $scope.reset = function() {
+    socket.emit('reset')
   };
 
 });

@@ -10,12 +10,14 @@ var io = require('socket.io')(http);
 var segments = require('./segments');
 var hardware = require('./hardware');
 
+// Routing and static files
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/views/index.html');
 });
 app.use(express.static(path.join(__dirname, 'public')));
 
 io.on('connection', function(socket){
+  // On client connect send all of the segments
   console.log('Client Connected');
   io.emit('segments', segments.all_segments());
 
@@ -23,6 +25,8 @@ io.on('connection', function(socket){
     console.log('Client Disconnected');
   });
 
+  // When a segment is changed, try to change locally
+  // if successful push to all clients, otherwise push all local records
   socket.on('segment-change', function(segment){
     if (segment.type == "block"){ return; }
     var response = segments.segment_change(segment)
@@ -32,8 +36,16 @@ io.on('connection', function(socket){
       io.emit('segment-change', response);
     }
   });
+
+  socket.on('mode', function(mode){
+    io.emit('mode', mode);
+  });
+
+  socket.on('reset', function(){
+    io.emit('segments', segments.all_segments(true));
+  });
 });
 
 http.listen(3000, function(){
-  console.log('listening on *:3000');
+  console.log('listening on port 3000');
 });

@@ -12,7 +12,14 @@
     </div>
     </div>
 
-    <div color-picker ng-model="color"></div>
+    <div>
+      <button data-ng-click="modeSwitch()">{{ mode }}</button><br />
+      <button style="background-color: {{ player1 }};">Player 1</button>
+      <div color-picker ng-model="player1"></div>
+      <button style="background-color: {{ player2 }}";>Player 2</button>
+      <div color-picker ng-model="player2"></div>
+      <button data-ng-click="reset()">Reset</button>
+    </div>
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="js/angular.min.js"></script>

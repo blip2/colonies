@@ -1,6 +1,12 @@
-
+// Controller IPs defined here
 var CONTROLLER_1 = "192.168.240.1"
+var CONTROLLER_2 = "192.168.240.2"
+var CONTROLLER_3 = "192.168.240.3"
+var CONTROLLER_4 = "192.168.240.4"
 
+// Segment map defined below
+// Each row and col should be assigned to a controller strip and sequence
+// Blocks should not be assigned to controllers (odd columns in odd rows)
 var SEGMENTS = [
 {
     ip: CONTROLLER_1,
