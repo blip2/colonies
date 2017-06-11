@@ -3,7 +3,13 @@
   Written for Arduino Yún
 
   Valid API commands:
-  "/arduino/segment/X/Y/#RRGGBB/"
+  "/arduino/segment/X/Y/Hue/Sat/Val/"
+  "/arduino/test/X/Y/0" 
+  "/arduino/off/0" 
+  "/arduino/rainbow/0" 
+  "/arduino/red/0" 
+  "/arduino/green/0" 
+  "/arduino/blue/0" 
   "/arduino/fade/X/Y/HHSSVV/HHSSVV/t" (WIP)
   "/arduino/pixel/X/Y/Z/HHSSVV" (WIP)
   where H, X, Y, Z are integers
@@ -14,33 +20,73 @@
 
 */
 
+#include "FastLED.h"
+
+FASTLED_USING_NAMESPACE
+
+#if defined(FASTLED_VERSION) && (FASTLED_VERSION < 3001000)
+#warning "Requires FastLED 3.1 or later; check github for latest code."
+#endif
+
+
 #include <Bridge.h>
 #include <BridgeServer.h>
 #include <BridgeClient.h>
-#include "FastLED.h"
 
 BridgeServer server;
 
 // LED Strip Configuration
 #define LED_TYPE    WS2811
-#define COLOR_ORDER GRB
+#define COLOR_ORDER RGB
 
-#define NUM_LEDS 128
-#define SEGMENT_LEN 32
-#define NUM_STRIPS 3
+#define NUM_LEDS 4 //128
+#define SEGMENT_LEN 1 // 1
+#define NUM_STRIPS 8 // strips per Yun
+#define NUM_SEGMENTS 4 // segments per strip
+#define BRIGHTNESS  96
+
 CRGB leds[NUM_STRIPS][NUM_LEDS];
+
+// array of segment lengths
+//int seglen[][NUM_SEGMENTS] = {
+//  {32,32,32,32},
+//  {32,32,32,32},
+//  {32,32,32,32},
+//  {32,32,32,32},
+//  {32,32,32,32},
+//  {32,32,32,32},
+//  {32,32,32,32},
+//  {32,32,32,32},
+//};
+
+int seglen[][NUM_SEGMENTS] = {
+  {1,1,1,1},
+  {1,1,1,1},
+  {1,1,1,1},
+  {1,1,1,1},
+  {1,1,1,1},
+  {1,1,1,1},
+  {1,1,1,1},
+  {1,1,1,1},
+};
+
+uint8_t gHue = 0; // rotating "base color" used by many of the patterns
+int mode = 0; // 0 = off, 1=test, 2=segment, 3=rainbow
 
 void setup() {
   // Sadly these have to be defined manually rather than parametrically...
   FastLED.addLeds<LED_TYPE, 2>(leds[0], NUM_LEDS);
-  FastLED.addLeds<LED_TYPE, 3>(leds[0], NUM_LEDS);
-  FastLED.addLeds<LED_TYPE, 4>(leds[0], NUM_LEDS);
-  FastLED.addLeds<LED_TYPE, 5>(leds[1], NUM_LEDS);
-  FastLED.addLeds<LED_TYPE, 6>(leds[1], NUM_LEDS);
-  FastLED.addLeds<LED_TYPE, 7>(leds[1], NUM_LEDS);
-  FastLED.addLeds<LED_TYPE, 8>(leds[2], NUM_LEDS);
-  FastLED.addLeds<LED_TYPE, 9>(leds[2], NUM_LEDS);
-  FastLED.addLeds<LED_TYPE, 10>(leds[2], NUM_LEDS);
+  FastLED.addLeds<LED_TYPE, 3>(leds[1], NUM_LEDS);
+  FastLED.addLeds<LED_TYPE, 4>(leds[2], NUM_LEDS);
+  FastLED.addLeds<LED_TYPE, 5>(leds[3], NUM_LEDS);
+  FastLED.addLeds<LED_TYPE, 6>(leds[4], NUM_LEDS);
+  FastLED.addLeds<LED_TYPE, 7>(leds[5], NUM_LEDS);
+  FastLED.addLeds<LED_TYPE, 8>(leds[6], NUM_LEDS);
+  FastLED.addLeds<LED_TYPE, 9>(leds[7], NUM_LEDS);
+  //FastLED.addLeds<LED_TYPE, 10>(leds[2], NUM_LEDS);
+
+  // set master brightness control
+  FastLED.setBrightness(BRIGHTNESS);
 
   Bridge.begin();
   server.listenOnLocalhost();
@@ -52,55 +98,76 @@ void loop() {
   if (client) {
     process(client);
     client.stop();
+  } else if (mode == '3') { // rainbow
+    rainbow(client);  
   }
+  
+  // do some periodic updates
+  EVERY_N_MILLISECONDS( 20 ) { gHue++; } // slowly cycle the "base color" through the rainbow
+  //EVERY_N_SECONDS( 10 ) { nextPattern(); } // change patterns periodically
+
   delay(50);
+  if (mode == '0') { // off
+    black(client);
+  } else if (mode == '1') { // test
+    
+  } else if (mode == '2') { // segment
+    
+  } else if (mode == '3') { // rainbow
+    rainbow(client);  
+  }
+  
 }
 
 void process(BridgeClient client) {
   String command = client.readStringUntil('/');
   if (command == "segment") {
+//    mode = 2;
+//    client.println(F("mode=segment"));
     segmentCommand(client);
-  }
-  /* if (command == "fade") {
+  } else
+  /*
+  if (command == "fade") {
     fadeCommand(client);
-    }
+  }
+  *
+   /*
     if (command == "pixel") {
     pixelCommand(client);
-    } */
+    }
+    */ 
+  if (command == "test") {
+//    mode = 1;
+//    client.println(F("mode=test"));
+    testCommand(client);
+  } else
+  if (command == "off") {
+//    mode = 0;
+//    client.println(F("mode=test"));
+    offCommand(client);
+  } else
+  if (command == "rainbow") {
+//    mode = 3;
+//    client.println(F("mode=rainbow"));
+    rainbowCommand(client);
+  } else
+  if (command == "red") {
+//    mode = 3;
+//    client.println(F("mode=rainbow"));
+    redCommand(client);
+  } else
+  if (command == "green") {
+//    mode = 3;
+//    client.println(F("mode=rainbow"));
+    greenCommand(client);
+  } else
+  if (command == "blue") {
+//    mode = 3;
+//    client.println(F("mode=rainbow"));
+    blueCommand(client);
+  } 
+  
 }
 
-void segmentCommand(BridgeClient client) {
-  int x, y;
-  String color;
-  char hex[6];
-
-  // Read parameters
-  x = client.parseInt();
-  if (client.read() == '/') {
-    y = client.parseInt();
-  }
-  if (client.read() == '/') {
-    color = client.readStringUntil('/');
-    color.toCharArray(hex, 6);
-  }
-
-  // TODO: Implement fade
-  int start = y * SEGMENT_LEN;
-  client.print(start);
-  for (int i = start; i < start + SEGMENT_LEN; i++) {
-    client.print(i
-    leds[x][i] = strtoul(hex, 0, 16);
-//     if (hue == 0) {
-//       leds[x][i] = CRGB::Black;
-//     }
-//     else
-//       leds[x][i].setHue(hue);
-// >>>>>>> master
-  }
-  FastLED.show();
-  client.print(F("Colour read as "));
-  client.print(color);
-
-}
 
 
