@@ -44,7 +44,7 @@ cp ./dots.init.sh /etc/init.d/dots-server
 chmod 755 /etc/init.d/dots-server
 update-rc.d dots-server defaults
 
-cp ./dots-update.cron /etc/cron.d/
+cp ./dots-update.cron /etc/cron.d/dots-update
 chmod u+x ./setup.sh
 chmod u+x ./check-tunnel.sh
 
