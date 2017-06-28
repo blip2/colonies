@@ -27,7 +27,7 @@ function all_segments(clear=false) {
     var i = 0;
 
     var h_rows = [0, 2, 4, 6, 8]
-    var h_cols = [0, 1, 2, 3, 4, 5, 6]
+    var h_cols = [1, 3, 5, 7, 9, 11, 13]
     var v_rows = [1, 3, 5, 7]
     var v_cols = [0, 2, 4, 6, 8, 10, 12, 14]
     var b_cols = [1, 3, 5, 7, 9, 11, 13]
@@ -64,13 +64,15 @@ function segment_change(segment) {
 }
 
 function update_segment(segment) {
+    console.log(segment)
     var hw = hardware.SEGMENTS.filter(function (seg) {
       return seg.row == segment.row &&
              seg.col == segment.col;
     })[0];
     if (hw) {
         var hsv = convert.hex.hsv(segment.color.replace('#',''))
-        var url = 'http://' + hw.ip + '/arduino/segment/' + hw.strip + '/' + hw.seq + '/' + parseInt(hsv[0]/100*255) + '/' + parseInt(hsv[1]/100*255) + '/' + parseInt(hsv[2]/100*255) + '/0/'
+        console.log(hsv);
+        var url = 'http://' + hw.ip + '/arduino/segment/' + hw.strip + '/' + hw.seq + '/' + parseInt(hsv[0]) + '/' + parseInt(hsv[1]/100*255) + '/' + parseInt(hsv[2]/100*255) + '/0/'
         console.log(url);
         request.get(url);
     };
