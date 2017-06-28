@@ -8,6 +8,10 @@ echo 'Starting setup. All normal setup output is logged to setup.log'
 cd "$(dirname "$0")"
 > setup.log
 
+echo 'Pulling latest version of this script...'
+
+git pull >>setup.log
+
 echo 'Checking apt packages required are installed...'
 
 if [ $(dpkg-query -W -f='${Status}' nodejs 2>/dev/null | grep -c "ok installed") -eq 0 ];
@@ -26,21 +30,36 @@ then
   apt-get --assume-yes install nginx >>setup.log
 fi
 
+if [ $(dpkg-query -W -f='${Status}' unattended-upgrades 2>/dev/null | grep -c "ok installed") -eq 0 ];
+then
+  apt-get --assume-yes install unattended-upgrades >>setup.log
+fi
+
 echo 'Copying configuration files...'
 
 cp ./dots.dnsmasq.conf /etc/dnsmasq.d/
 service dnsmasq restart
 
-cp ./splash.html /var/www/html/index.html
-
 cp ./dots.init.sh /etc/init.d/dots-server
 chmod 755 /etc/init.d/dots-server
 update-rc.d dots-server defaults
 
-echo 'Installing node.js'
+cp ./dots-update.cron /etc/cron.d/
+chmod u+x ./setup.sh
+chmod u+x ./check-tunnel.sh
+
+echo 'Creating/checking tunnel...'
+bash check-tunnel.sh >>setup.log
+
+echo 'Copying splash pages...'
+
+cp -rf ../splash/* /var/www/html/
+service nginx restart
+
+echo 'Installing npm packages...'
 
 cd ../server/
-npm install >>setup.log
+npm install >>setup.log 2>&1
 
 echo 'Starting dots and boxes...'
-service dots-server start
+service dots-server restart

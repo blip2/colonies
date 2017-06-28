@@ -67,6 +67,8 @@ function update_segment(segment) {
              seg.col == segment.col;
     })[0];
     if (hw) {
+
+        // Change to / Hue / Sat / Val / Fade Time /
         var url = 'http://' + hw.ip + '/arduino/segment/' + hw.strip + '/' + hw.seq + '/' + segment.color.replace('#','') + '/'
         console.log(url);
         request.get(url);

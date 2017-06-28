@@ -3,10 +3,12 @@
 // Ben Hussey - May 2017
 
 // Controller IPs defined here
-var CONTROLLER_1 = "192.168.240.1"
-var CONTROLLER_2 = "192.168.240.2"
-var CONTROLLER_3 = "192.168.240.3"
-var CONTROLLER_4 = "192.168.240.4"
+var CONTROLLER_1 = "192.168.10.101"
+var CONTROLLER_2 = "192.168.10.102"
+var CONTROLLER_3 = "192.168.10.103"
+var CONTROLLER_4 = "192.168.10.104"
+var CONTROLLER_5 = "192.168.10.105"
+var CONTROLLER_6 = "192.168.10.106"
 
 // Segment map defined below
 // Each row and col should be assigned to a controller strip and sequence
