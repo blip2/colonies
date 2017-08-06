@@ -1,6 +1,6 @@
 // dots and boxes installation
 // server interface
-// Ben Hussey - May 2017
+// Ben Hussey, Francesco Anselmo - May - August 2017
 
 // Controller IPs defined here
 var CONTROLLERS = [
@@ -12,7 +12,23 @@ var CONTROLLERS = [
     "192.168.10.106",
 ]
 
-// Segment map defined below
+// Segment map defined below according to this diagram
+
+/*
+ *    0  1  2  3  4  5  6  7  8  9 10 11 12 13 14
+ *  0 o --- o --- o --- o --- o --- o --- o --- o
+ *  1 |     |     |     |     |     |     |     |
+ *  2 o --- o --- o --- o --- o --- o --- o --- o
+ *  3 |     |     |     |     |     |     |     |
+ *  4 o --- o --- o --- o --- o --- o --- o --- o
+ *  5 |     |     |     |     |     |     |     |
+ *  6 o --- o --- o --- o --- o --- o --- o --- o
+ *  7 |     |     |     |     |     |     |     |
+ *  8 o --- o --- o --- o --- o --- o --- o --- o
+ *
+ */
+
+
 // Each row and col should be assigned to a controller strip and sequence
 // Blocks should not be assigned to controllers (odd columns in odd rows)
 var SEGMENTS = [
