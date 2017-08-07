@@ -29,7 +29,25 @@ void blueCommand(BridgeClient client) {
   mode = 1;
   client.println(F("mode=blue"));
 //  if (client.read() == '/') {
-    red(client);
+    blue(client);
+    FastLED.show();
+//  }
+}
+
+void yellowCommand(BridgeClient client) {
+  mode = 1;
+  client.println(F("mode=yellow"));
+//  if (client.read() == '/') {
+    yellow(client);
+    FastLED.show();
+//  }
+}
+
+void purpleCommand(BridgeClient client) {
+  mode = 1;
+  client.println(F("mode=purple"));
+//  if (client.read() == '/') {
+    purple(client);
     FastLED.show();
 //  }
 }
