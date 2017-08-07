@@ -2,7 +2,8 @@
 // server interface
 // Ben Hussey - May 2017
 
-var request = require('request-promise-lite')
+var request = require('request-promise-lite');
+var convert = require('color-convert');
 var hardware = require('./hardware');
 var segments = [];
 
@@ -20,12 +21,13 @@ function all_segments(clear=false) {
         return segments;
     } else {
         segments = [];
+        reset_all();
     }
 
     var i = 0;
 
     var h_rows = [0, 2, 4, 6, 8]
-    var h_cols = [0, 1, 2, 3, 4, 5, 6]
+    var h_cols = [1, 3, 5, 7, 9, 11, 13]
     var v_rows = [1, 3, 5, 7]
     var v_cols = [0, 2, 4, 6, 8, 10, 12, 14]
     var b_cols = [1, 3, 5, 7, 9, 11, 13]
@@ -62,15 +64,26 @@ function segment_change(segment) {
 }
 
 function update_segment(segment) {
+    console.log(segment)
     var hw = hardware.SEGMENTS.filter(function (seg) {
       return seg.row == segment.row &&
              seg.col == segment.col;
     })[0];
     if (hw) {
-        var url = 'http://' + hw.ip + '/arduino/segment/' + hw.strip + '/' + hw.seq + '/' + segment.color.replace('#','') + '/'
+        var hsv = convert.hex.hsv(segment.color.replace('#',''))
+        console.log(hsv);
+        var url = 'http://' + hw.ip + '/arduino/segment/' + hw.strip + '/' + hw.seq + '/' + parseInt(hsv[0]) + '/' + parseInt(hsv[1]/100*255) + '/' + parseInt(hsv[2]/100*255) + '/0/'
         console.log(url);
         request.get(url);
     };
+}
+
+function reset_all() {
+    hardware.CONTROLLERS.forEach(function(ip) {
+        var url = 'http://' + ip + '/arduino/off/0'
+        console.log(url);
+        request.get(url);
+    });
 }
 
 exports.all_segments = all_segments;
