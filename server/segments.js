@@ -64,16 +64,16 @@ function segment_change(segment) {
 }
 
 function update_segment(segment) {
-    console.log(segment)
+    // console.log(segment)
     var hw = hardware.SEGMENTS.filter(function (seg) {
       return seg.row == segment.row &&
              seg.col == segment.col;
     })[0];
     if (hw) {
         var hsv = convert.hex.hsv(segment.color.replace('#',''))
-        console.log(hsv);
+        // console.log(hsv);
         var url = 'http://' + hw.ip + '/arduino/segment/' + hw.strip + '/' + hw.seq + '/' + parseInt(hsv[0]) + '/' + parseInt(hsv[1]/100*255) + '/' + parseInt(hsv[2]/100*255) + '/0/'
-        console.log(url);
+        // console.log(url);
         request.get(url);
     };
 }
@@ -81,7 +81,6 @@ function update_segment(segment) {
 function reset_all() {
     hardware.CONTROLLERS.forEach(function(ip) {
         var url = 'http://' + ip + '/arduino/off/0'
-        console.log(url);
         request.get(url);
     });
 }

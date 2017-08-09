@@ -33,13 +33,12 @@ var app = angular.module('DotsandBoxes', [
 });
 
 app.controller('segments', function ($scope, $filter, $window, socket) {
-
   var player = 1;
-  $scope.state = "Creative";
-  $scope.colour = "#FF0000";
 
   $scope.colours = ['#D63F15', '#0F5573', '#FA9B1E', '#D22D7D', '#1982AF', '#28AF73', '#CCCCCC', '#000000'];
+  $scope.colour = "#D63F15";
   $scope.states = ['Creative', 'Game', 'Demo'];
+  $scope.state = "Creative";
 
   angular.element($window).on('resize', function () {
     $scope.updateDims();
