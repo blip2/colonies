@@ -1,12 +1,13 @@
 body {
     background: #333333;
+    font-family: sans-serif;
 }
 
-.container {
+#container {
     margin-top: 50px;
-    width: 1000px;
+    max-width: 1000px;
     margin: 50px auto;
-    background: #222222;
+    background: #222;
 }
 
 .block-wrapper {
@@ -16,26 +17,63 @@ body {
 
 .seg-block {
     display: inline-block;
-    width: 120px;
-    height: 120px;
     float: none;
 }
 
 .seg-horiz {
     display: inline-block;
-    width: 120px;
-    height: 20px;
     float: none;
-    border-left: 20px solid #222222;
 }
 
 .seg-vert {
     display: inline-block;
-    width: 20px;
-    height: 120px;
     float: none;
 }
 
 .row-horiz {
     border-left: 20px solid #222222;
+}
+
+.button {
+    margin: 10px;
+    padding: 20px;
+    font-size: 1.1em;
+    background: #999;
+    border: 2px solid #000;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.colour {
+    margin: 10px;
+    width: 64px;
+    height: 64px;
+    border: 2px solid #000;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.selected {
+    border: 6px solid #000;
+}
+
+.menu-button {
+    position: fixed;
+    top: 0;
+    right: 0;
+}
+
+.menu-wrapper {
+    position: fixed;
+    width: 100%;
+    top: 0;
+}
+
+.menu {
+    position: relative;
+    max-width: 550px;
+    padding: 20px;
+    margin: 30px auto;
+    background: #666;
+    border-radius: 10px;
 }

@@ -6,12 +6,12 @@
   Valid API commands:
   // http://192.168.10.104/arduino/segment/1/0/150/255/255/0/
   "/arduino/segment/X/Y/Hue/Sat/Val/FadeTime"
-  "/arduino/test/0" 
-  "/arduino/off/0" 
-  "/arduino/rainbow/0" 
-  "/arduino/red/0" 
-  "/arduino/green/0" 
-  "/arduino/blue/0" 
+  "/arduino/test/0"
+  "/arduino/off/0"
+  "/arduino/rainbow/0"
+  "/arduino/red/0"
+  "/arduino/green/0"
+  "/arduino/blue/0"
   "/arduino/yellow/0"
   "/arduino/purple/0"
   "/arduino/fade/X/Y/HHSSVV/HHSSVV/t" (WIP)
@@ -52,7 +52,7 @@ BridgeServer server;
 CRGB leds[NUM_STRIPS][NUM_LEDS];
 
 /*
- *     0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 
+ *     0  1  2  3  4  5  6  7  8  9 10 11 12 13 14
  * l 0 o --- o --- o --- o --- o --- o --- o --- o (1) r
  *   1 |     |     |     |     |     |     |     |
  *   2 o --- o --- o --- o --- o --- o --- o --- o (2)
@@ -88,7 +88,7 @@ CRGB leds[NUM_STRIPS][NUM_LEDS];
 // Yun 5: B4218AF06D1C (controller 4)
 // 5.2 column 14 (8):  31+30+30+30 (checked)
 // 5.5 row    0r (1):  29+31+30+0  (checked)
-// 5.8 row    1r (2):  29+28+31+0  (checked)
+// 5.8 row    2r (2):  29+28+31+0  (checked)
 
 // Yun 6: B4218AF06D14 (controller 5)
 // 6.2 row    4r (3):  31+31+30+0  (checked)
@@ -129,9 +129,9 @@ int seglen[][NUM_SEGMENTS] = {
 //  {29,28,31,0},
 
 // Yun 6: B4218AF06D14
-  {31,31,30,0}, 
+  {31,31,30,0},
   {32,28,30,0},
-  {29,28,31,0}, 
+  {29,28,31,0},
 
 };
 
@@ -175,15 +175,15 @@ void loop() {
 
 //    randomStrip();
   initStrip();
-  
+
 //  BridgeClient client = server.accept();
 //  if (client) {
 //    process(client);
 //    client.stop();
 //  } else if (mode == '3') { // rainbow
-//    rainbow(client);  
+//    rainbow(client);
 //  }
-  
+
   // do some periodic updates
   EVERY_N_MILLISECONDS( 20 ) { gHue++; } // slowly cycle the "base color" through the rainbow
   //EVERY_N_SECONDS( 10 ) { nextPattern(); } // change patterns periodically
@@ -192,13 +192,13 @@ void loop() {
 //  if (mode == '0') { // off
 //    black(client);
 //  } else if (mode == '1') { // test
-//    
+//
 //  } else if (mode == '2') { // segment
-//    
+//
 //  } else if (mode == '3') { // rainbow
-//    rainbow(client);  
+//    rainbow(client);
 //  }
-  
+
 }
 
 void process(BridgeClient client) {
@@ -217,7 +217,7 @@ void process(BridgeClient client) {
     if (command == "pixel") {
     pixelCommand(client);
     }
-    */ 
+    */
   if (command == "test") {
 //    mode = 1;
 //    client.println(F("mode=test"));
@@ -257,8 +257,8 @@ void process(BridgeClient client) {
 //    mode = 3;
 //    client.println(F("mode=rainbow"));
     purpleCommand(client);
-  } 
-  
+  }
+
 }
 
 

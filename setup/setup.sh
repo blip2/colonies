@@ -14,10 +14,9 @@ git pull >>setup.log
 
 echo 'Checking apt packages required are installed...'
 
-if [ $(dpkg-query -W -f='${Status}' nodejs 2>/dev/null | grep -c "ok installed") -eq 0 ];
+if [ $(dpkg-query -W -f='${Status}' curl 2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
-  curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash - >>setup.log
-  sudo apt-get --assume-yes install -y nodejs >>setup.log
+  apt-get --assume-yes install curl >>setup.log
 fi
 
 if [ $(dpkg-query -W -f='${Status}' dnsmasq 2>/dev/null | grep -c "ok installed") -eq 0 ];
@@ -33,6 +32,12 @@ fi
 if [ $(dpkg-query -W -f='${Status}' unattended-upgrades 2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
   apt-get --assume-yes install unattended-upgrades >>setup.log
+fi
+
+if [ $(dpkg-query -W -f='${Status}' nodejs 2>/dev/null | grep -c "ok installed") -eq 0 ];
+then
+  curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash - >>setup.log
+  sudo apt-get --assume-yes install -y nodejs >>setup.log
 fi
 
 echo 'Copying configuration files...'

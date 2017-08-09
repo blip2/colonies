@@ -10,6 +10,8 @@ var io = require('socket.io')(http);
 var segments = require('./segments');
 var hardware = require('./hardware');
 
+var state = "free";
+
 // Routing and static files
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/views/index.html');
@@ -20,6 +22,7 @@ io.on('connection', function(socket){
   // On client connect send all of the segments
   console.log('Client Connected');
   io.emit('segments', segments.all_segments());
+  io.emit('state', state);
 
   socket.on('disconnect', function(){
     console.log('Client Disconnected');
@@ -37,8 +40,9 @@ io.on('connection', function(socket){
     }
   });
 
-  socket.on('mode', function(mode){
-    io.emit('mode', mode);
+  socket.on('state', function(new_state){
+    state = new_state;
+    io.emit('state', state);
   });
 
   socket.on('reset', function(){
