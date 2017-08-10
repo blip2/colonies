@@ -32,6 +32,13 @@ body {
     background-color: rgba(0,0,0,0.4);
 }
 
+.text-vertical-center h5 {
+    color: #aaa;
+    margin-top: 0;
+    padding-bottom: 5px;
+    background-color: rgba(0,0,0,0.4);
+}
+
 /* Custom Button Styles */
 
 .btn-dark {
