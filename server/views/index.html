@@ -24,17 +24,17 @@
       <div>
         <p>
         <strong>Creative</strong>: Pick a colour and click on the segment to change it.<br/>
-        <strong>Game</strong>: Connect with two (or more) devices and take turns to select a segment, if you complete a square you 'win' that block and get another go. The player with the most blocks their colour wins.<br/>
-        <strong>Demo</strong>: Display some pretty patterns!<br/>
+        <!-- <strong>Game</strong>: Connect with two (or more) devices and take turns to select a segment, if you complete a square you 'win' that block and get another go. The player with the most blocks their colour wins.<br/> -->
+        <strong>Random</strong>: Display some pretty colours!<br/>
         </p>
-        <p>{{ state }}
+        <p>
           <button ng-repeat="sta in states" data-ng-click="setState(sta)" class="button" ng-class="{selected: state == sta}">{{ sta }}</button>
         </p>
 
-        <p ng-if="state=game">Select a colour to start playing</p>
+        <p ng-if="state=='Game'">Select a colour to start playing</p>
 
-        <p>
-          <button ng-repeat="col in colours" data-ng-click="setColour(col)" class="colour" style="background: {{ col  }}" ng-class="{selected: colour == col}"></button>
+        <p ng-if="state=='Creative'">
+          <button ng-repeat="col in colours" data-ng-click="setColour(col)" class="colour" style="background: {{ col }}" ng-class="{selected: colour == col}"></button>
         </p>
 
         <p>

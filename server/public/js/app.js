@@ -37,7 +37,7 @@ app.controller('segments', function ($scope, $filter, $window, socket) {
 
   $scope.colours = ['#D63F15', '#0F5573', '#FA9B1E', '#D22D7D', '#1982AF', '#28AF73', '#CCCCCC', '#000000'];
   $scope.colour = "#D63F15";
-  $scope.states = ['Creative', 'Game', 'Demo'];
+  $scope.states = ["Creative", "Random"];
   $scope.state = "Creative";
 
   angular.element($window).on('resize', function () {
@@ -104,8 +104,7 @@ app.controller('segments', function ($scope, $filter, $window, socket) {
         socket.emit('segment-change', segment);
       }
     } else {
-      console.log(segment)
-      if (segment.type != 'block') {
+      if ($scope.state == 'Creative' && segment.type != 'block') {
         segment.color = $scope.colour;
         socket.emit('segment-change', segment);
       };
@@ -118,7 +117,7 @@ app.controller('segments', function ($scope, $filter, $window, socket) {
       $scope.reset();
     }
     socket.emit('state', $scope.state);
-    console.log($scope.state)
+    $scope.showMenu = false;
   }
 
   $scope.setColour = function(colour) {
@@ -126,7 +125,7 @@ app.controller('segments', function ($scope, $filter, $window, socket) {
     if ($scope.state == "Game") {
       // login as player
     }
-    console.log($scope.colour)
+    $scope.showMenu = false;
   }
 
   $scope.reset = function() {

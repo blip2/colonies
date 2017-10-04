@@ -6,6 +6,8 @@ var request = require('request-promise-lite');
 var convert = require('color-convert');
 var hardware = require('./hardware');
 var segments = [];
+var colors = ['#D63F15', '#0F5573', '#FA9B1E', '#D22D7D', '#1982AF', '#28AF73', '#CCCCCC', '#000000'];
+
 
 function Segment(id, row, col, type, color) {
     this.id = id;
@@ -63,6 +65,24 @@ function segment_change(segment) {
     return segment;
 }
 
+function random_change() {
+    segment_list = segments.filter(function (seg) {
+      return seg.type == "horiz" ||
+             seg.type == "vert";
+    });
+    segment = segment_list[Math.floor(Math.random() * segment_list.length)]
+    if (segment) {
+        segment.color = colors[Math.floor(Math.random() * colors.length)]
+        update_segment(segment)
+        segments = segments.filter(function( obj ) {
+            return obj.id !== segment.id;
+        });
+        segments.push(segment);
+        return segment;
+    }
+    return;
+}
+
 function update_segment(segment) {
     // console.log(segment)
     var hw = hardware.SEGMENTS.filter(function (seg) {
@@ -87,3 +107,4 @@ function reset_all() {
 
 exports.all_segments = all_segments;
 exports.segment_change = segment_change;
+exports.random_change = random_change;
