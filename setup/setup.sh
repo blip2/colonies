@@ -24,9 +24,9 @@ then
   apt-get --assume-yes install dnsmasq >>setup.log
 fi
 
-if [ $(dpkg-query -W -f='${Status}' nginx 2>/dev/null | grep -c "ok installed") -eq 0 ];
+if [ $(dpkg-query -W -f='${Status}' apache2 2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
-  apt-get --assume-yes install nginx >>setup.log
+  apt-get --assume-yes install apache2 >>setup.log
 fi
 
 if [ $(dpkg-query -W -f='${Status}' unattended-upgrades 2>/dev/null | grep -c "ok installed") -eq 0 ];
@@ -52,6 +52,10 @@ update-rc.d dots-server defaults
 cp ./dots-update.cron /etc/cron.d/dots-update
 chmod u+x ./setup.sh
 chmod u+x ./check-tunnel.sh
+
+a2enmod rewrite ssl >>setup.log
+cp ./dots.apache2.conf /etc/apache2/sites-enabled/000-default.conf
+service apache2 restart >>setup.log
 
 echo 'Creating/checking tunnel...'
 bash check-tunnel.sh >>setup.log
