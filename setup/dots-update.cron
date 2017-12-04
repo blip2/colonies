@@ -2,3 +2,4 @@ SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 55 0 * * *   root    /home/dots/dots_and_boxes/setup/setup.sh
 * * * * *   root    /home/dots/dots_and_boxes/setup/check-tunnel.sh
+5 5 * * *   root    shutdown -r
