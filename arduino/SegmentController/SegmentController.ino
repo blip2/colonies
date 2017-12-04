@@ -174,15 +174,15 @@ void setup() {
 void loop() {
 
 //    randomStrip();
-  initStrip();
+  //initStrip();
 
-//  BridgeClient client = server.accept();
-//  if (client) {
-//    process(client);
-//    client.stop();
-//  } else if (mode == '3') { // rainbow
-//    rainbow(client);
-//  }
+  BridgeClient client = server.accept();
+  if (client) {
+    process(client);
+    client.stop();
+  } else if (mode == '3') { // rainbow
+    rainbow(client);
+  }
 
   // do some periodic updates
   EVERY_N_MILLISECONDS( 20 ) { gHue++; } // slowly cycle the "base color" through the rainbow

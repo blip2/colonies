@@ -1,6 +1,7 @@
 #!/bin/bash
 
 createTunnel() {
+    route del default gw 192.168.10.1 eno1
     /usr/bin/ssh -f -i /home/dots/.ssh/id_rsa -N -R13344:localhost:22 -L19922:130.211.66.54:22 tunnel@130.211.66.54
     if [[ $? -eq 0 ]]; then
         echo Tunnel to 130.211.66.54 created successfully
