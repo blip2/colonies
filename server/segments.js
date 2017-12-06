@@ -7,13 +7,13 @@ var convert = require('color-convert');
 var hardware = require('./hardware');
 var segments = [];
 var colors = {
-    '#D63F15': {'h': 0, 's': 0, 'v': 0, },
-    '#0F5573': {'h': 0, 's': 0, 'v': 0, },
-    '#FA9B1E': {'h': 0, 's': 0, 'v': 0, },
-    '#D22D7D': {'h': 0, 's': 0, 'v': 0, },
-    '#1982AF': {'h': 0, 's': 0, 'v': 0, },
-    '#28AF73': {'h': 0, 's': 0, 'v': 0, },
-    '#CCCCCC': {'h': 0, 's': 0, 'v': 0, },
+    '#FF0000': {'h': 0, 's': 255, 'v': 225, },
+    '#FFFF66': {'h': 30, 's': 255, 'v': 225, },
+    '#66FF33': {'h': 80, 's': 255, 'v': 225, },
+    '#00FFFF': {'h': 110, 's': 255, 'v': 225, },
+    '#3399FF': {'h': 150, 's': 255, 'v': 225, },
+    '#FF00AA': {'h': 220, 's': 255, 'v': 225, },
+    '#CCCCCC': {'h': 0, 's': 0, 'v': 225, },
     '#000000': {'h': 0, 's': 0, 'v': 0, },
 };
 
@@ -102,11 +102,11 @@ function update_segment(segment) {
     if (hw) {
         if (segment.color) {
             //console.log(colors)
-            //console.log(segment.color)
-            var hsv = colors[segment.color]
-            //console.log(hsv);
+            console.log(segment.color);
+            var hsv = colors[segment.color];
+            console.log(hsv);
             var url = 'http://' + hw.ip + '/arduino/segment/' + hw.strip + '/' + hw.seq + '/' + parseInt(hsv['h']) + '/' + parseInt(hsv['s']) + '/' + parseInt(hsv['v']) + '/0/'
-            //console.log(url);
+            console.log(url);
             request.get(url);
         } else {
             var url = 'http://' + hw.ip + '/arduino/segment/' + hw.strip + '/' + hw.seq + '/0/0/0/0/'

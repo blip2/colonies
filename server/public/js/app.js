@@ -1,6 +1,6 @@
 // dots and boxes installation
 // client interface
-// Ben Hussey - May 2017
+// Ben Hussey - December 2017
 
 'use strict';
 
@@ -35,8 +35,8 @@ var app = angular.module('DotsandBoxes', [
 app.controller('segments', function ($scope, $filter, $window, socket) {
   var player = 1;
 
-  $scope.colours = ['#D63F15', '#0F5573', '#FA9B1E', '#D22D7D', '#1982AF', '#28AF73', '#CCCCCC', '#000000'];
-  $scope.colour = "#D63F15";
+  $scope.colours = ['#FF0000', '#FFFF66', '#66FF33', '#00FFFF', '#3399FF', '#FF00AA', '#CCCCCC', '#000000'];
+  $scope.colour = "#FF0000";
   $scope.states = ["Creative", "Random"];
   $scope.state = "Creative";
 
