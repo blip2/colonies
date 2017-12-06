@@ -6,7 +6,16 @@ var request = require('request-promise-lite');
 var convert = require('color-convert');
 var hardware = require('./hardware');
 var segments = [];
-var colors = ['#D63F15', '#0F5573', '#FA9B1E', '#D22D7D', '#1982AF', '#28AF73', '#CCCCCC', '#000000'];
+var colors = {
+    '#D63F15': {'h': 0, 's': 0, 'v': 0, },
+    '#0F5573': {'h': 0, 's': 0, 'v': 0, },
+    '#FA9B1E': {'h': 0, 's': 0, 'v': 0, },
+    '#D22D7D': {'h': 0, 's': 0, 'v': 0, },
+    '#1982AF': {'h': 0, 's': 0, 'v': 0, },
+    '#28AF73': {'h': 0, 's': 0, 'v': 0, },
+    '#CCCCCC': {'h': 0, 's': 0, 'v': 0, },
+    '#000000': {'h': 0, 's': 0, 'v': 0, },
+};
 
 
 function Segment(id, row, col, type, color) {
@@ -72,7 +81,8 @@ function random_change() {
     });
     segment = segment_list[Math.floor(Math.random() * segment_list.length)]
     if (segment) {
-        segment.color = colors[Math.floor(Math.random() * colors.length)]
+        var keys = Object.keys(colors)
+        segment.color = keys[Math.floor(Math.random() * keys.length)]
         update_segment(segment)
         segments = segments.filter(function( obj ) {
             return obj.id !== segment.id;
@@ -90,11 +100,18 @@ function update_segment(segment) {
              seg.col == segment.col;
     })[0];
     if (hw) {
-        var hsv = convert.hex.hsv(segment.color.replace('#',''))
-        // console.log(hsv);
-        var url = 'http://' + hw.ip + '/arduino/segment/' + hw.strip + '/' + hw.seq + '/' + parseInt(hsv[0]) + '/' + parseInt(hsv[1]/100*255) + '/' + parseInt(hsv[2]/100*255) + '/0/'
-        // console.log(url);
-        request.get(url);
+        if (segment.color) {
+            //console.log(colors)
+            //console.log(segment.color)
+            var hsv = colors[segment.color]
+            //console.log(hsv);
+            var url = 'http://' + hw.ip + '/arduino/segment/' + hw.strip + '/' + hw.seq + '/' + parseInt(hsv['h']) + '/' + parseInt(hsv['s']) + '/' + parseInt(hsv['v']) + '/0/'
+            //console.log(url);
+            request.get(url);
+        } else {
+            var url = 'http://' + hw.ip + '/arduino/segment/' + hw.strip + '/' + hw.seq + '/0/0/0/0/'
+            request.get(url);
+        }
     };
 }
 
