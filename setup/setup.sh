@@ -55,7 +55,6 @@ chmod u+x ./check-tunnel.sh
 
 a2enmod rewrite ssl >>setup.log
 cp ./dots.apache2.conf /etc/apache2/sites-enabled/000-default.conf
-service apache2 restart >>setup.log
 
 echo 'Creating/checking tunnel...'
 bash check-tunnel.sh >>setup.log
@@ -63,7 +62,7 @@ bash check-tunnel.sh >>setup.log
 echo 'Copying splash pages...'
 
 cp -rf ../splash/* /var/www/html/
-service nginx restart
+service apache2 restart
 
 echo 'Installing npm packages...'
 
