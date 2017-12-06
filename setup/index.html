@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Colonies</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/stylish-portfolio.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header id="top" class="header">
+        <div class="text-vertical-center">
+            <h1>Colonies</h1>
+            <br/>
+            <a href="http://192.168.10.200:3000" class="btn btn-dark btn-lg">Interact!</a>
+        </div>
+    </header>
+
+    <!-- About -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h5>Interactive Artwork<br/>2017<br/>Acrylic, Aluminium, LEDs</h5>
+
+                    <p><strong>Colonies</strong> is a light installation inspired by the combinational strategy game Dots and Boxes.</p>
+
+                    <p>The rectangular grid that partitions the atrium is colonised by lines of light, that gradually appear and disappear, filling the structure with grouped patterns of colour.</p>
+
+                    <p>This interactive artwork has been designed with an Internet of Things approach with a programming interface that allows web developers to create programs that can modify and extend the original design and behaviour.</p>
+
+                    <p><strong>Concept and design</strong> - <a href="http://www.installarchive.com/">Install Archive</a> (Luke Currall, Lee Regan)</p>
+                    <p><strong>Lighting design, interaction design and programming</strong> - <a href="http://lightlab.arup.com/lightlab/">Arup</a> (Francesco Anselmo, Inessa Demidova, Ben Hussey)</p>
+                    <p><strong>Fabrication</strong> -  Keith Parker Fabrications</p>
+
+                    <p>Work kindly loaned by James Layfield</p>
+
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container -->
+    </section>
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script>
+    // delegate event for performance, and save attaching a million events to each anchor
+    document.addEventListener('click', function(event) {
+      var target = event.target;
+      if (target.tagName.toLowerCase() == 'a')
+      {
+          var port = target.getAttribute('href').match(/^:(\d+)(.*)/);
+          if (port)
+          {
+             target.href = port[2];
+             target.port = port[1];
+          }
+      }
+    }, false);
+    </script>
+
+</body>
+
+</html>
