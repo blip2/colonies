@@ -35,7 +35,7 @@ var app = angular.module('DotsandBoxes', [
 app.controller('segments', function ($scope, $filter, $window, socket) {
   var player = 1;
 
-  $scope.colours = ['#FF0000', '#FFFF66', '#66FF33', '#00FFFF', '#3399FF', '#FF00AA', '#CCCCCC', '#000000'];
+  $scope.colours = ['#FF0000', '#FFFF66', '#66FF33', '#00FFFF', '#0000FF', '#FF00AA', '#CCCCCC', '#000000'];
   $scope.colour = "#FF0000";
   $scope.states = ["Creative", "Random"];
   $scope.state = "Creative";
