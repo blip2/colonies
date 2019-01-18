@@ -62,7 +62,7 @@ var tick = function() {
   // System runs between 9am and 9pm on weekdays (or for 20 mins after user interaction)
   var now = new Date()
   var timeout = (now - (1000 * 60 * 20))
-  if (now.getDay() > 5 || now.getHours() < 9 || now.getHours() >= 21) {
+  if (now.getDay() > 5 || now.getHours() < 9 || now.getHours() >= 22) {
     if (state != "Off" && manual_change < timeout) {
       console.log("outside working hours - turning off...")
       state = "Off";

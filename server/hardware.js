@@ -370,7 +370,7 @@ var SEGMENTS = [
 },
 {
     ip: CONTROLLERS[3],
-    strip: 1,
+    strip: 2,
     seq: 1,
     row: 3,
     col: 10,
