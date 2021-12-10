@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  service:
+    build:
+      context: .
+      target: service
+    volumes:
+      - ./service:/service
+      - /service/node_modules
+    command: node colonies
+    restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - colonies
+
+  client:
+    build:
+      context: .
+      target: client-install
+    command: npm run serve
+    volumes:
+      - ./client:/client
+      - /client/node_modules
+    restart: always
+    ports:
+      - "8080:8080"
+    networks:
+      - colonies
+
+networks:
+  colonies:

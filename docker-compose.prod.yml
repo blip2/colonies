@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  service:
+    build:
+      context: .
+      target: service
+    command: node colonies
+    restart: always
+    ports:
+      - "127.0.0.1:3000:3000"
+    networks:
+      - colonies
+
+  web:
+    build:
+      context: .
+      target: web
+    command: nginx -g 'daemon off;'
+    restart: always
+    ports:
+      - "127.0.0.1:80:80"
+    networks:
+      - colonies
+    depends_on:
+      - server
+
+networks:
+  colonies:
