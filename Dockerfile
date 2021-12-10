@@ -5,7 +5,7 @@ COPY ./service/package*.json ./
 RUN npm install
 COPY ./service/ ./
 
-FROM node:15 as client-install
+FROM node:14-alpine as client-install
 
 WORKDIR /client/
 
@@ -14,7 +14,7 @@ RUN npm install
 COPY ./client/ ./
 
 FROM client-install as client-build
-RUN npm run build
+RUN npm run generate
 
 FROM nginx:1.19-alpine as web
 

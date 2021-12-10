@@ -11,7 +11,7 @@ services:
     command: node colonies
     restart: always
     ports:
-      - "3000:3000"
+      - "5000:5000"
     networks:
       - colonies
 
@@ -19,13 +19,13 @@ services:
     build:
       context: .
       target: client-install
-    command: npm run serve
+    command: npm run dev
     volumes:
       - ./client:/client
       - /client/node_modules
     restart: always
     ports:
-      - "8080:8080"
+      - "3000:3000"
     networks:
       - colonies
 

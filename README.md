@@ -26,6 +26,10 @@ The six Arduino Yún have a wired ethernet connection to an 8-port switch which 
 
 The headend server runs on a Acer small form factor PC running Ubuntu which is connected to the office wall port. The server also connects to the Bradfield Centre wireless network with a fixed IP to allow users to interact with the installation.
 
+## Development
+
+Configured as Docker containers with docker installed `docker-compose up` should start the client (nuxt) in development mode and service (node) in the background.
+
 ## Support
 
 The installation software is currently being maintained by Ben Hussey (ben@blip2.net). Pull requests are very welcome.
