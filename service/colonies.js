@@ -2,12 +2,19 @@
 // Ben Hussey - May 2017
 
 var path = require("path");
-var express = require("express");
-var app = express();
-var http = require("http").Server(app);
-var io = require("socket.io")(http);
-var segments = require("./segments");
 
+var express = require("express");
+const app = express();
+const httpServer = require("http").createServer(app);
+const io = require("socket.io")(httpServer, {
+  allowEIO3: true,
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+});
+
+var segments = require("./segments");
 var state = "Random";
 var manual_change = new Date();
 
@@ -85,4 +92,5 @@ var tick = function () {
 
 setInterval(tick, 1000);
 
-http.listen(5000, function () {});
+httpServer.listen(5000);
+console.log("started colonies service")

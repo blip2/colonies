@@ -92,6 +92,12 @@ function random_change() {
   return;
 }
 
+const handle_errors = (promise) => {
+  return promise.catch((error) => {
+    console.log("Error Communicating with Arduino: ", error.message);
+  });
+};
+
 function update_segment(segment) {
   // console.log(segment)
   var hw = hardware.SEGMENTS.filter(function (seg) {
@@ -99,10 +105,7 @@ function update_segment(segment) {
   })[0];
   if (hw) {
     if (segment.color) {
-      //console.log(colors)
-      console.log(segment.color);
       var hsv = colors[segment.color];
-      console.log(hsv);
       var url =
         "http://" +
         hw.ip +
@@ -117,8 +120,6 @@ function update_segment(segment) {
         "/" +
         parseInt(hsv["v"]) +
         "/0/";
-      console.log(url);
-      axios.get(url);
     } else {
       var url =
         "http://" +
@@ -128,15 +129,15 @@ function update_segment(segment) {
         "/" +
         hw.seq +
         "/0/0/0/0/";
-      axios.get(url);
     }
+    handle_errors(axios.get(url));
   }
 }
 
 function reset_all() {
   hardware.CONTROLLERS.forEach(function (ip) {
     var url = "http://" + ip + "/arduino/off/0";
-    axios.get(url);
+    handle_errors(axios.get(url));
   });
 }
 
