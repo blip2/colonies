@@ -18,12 +18,18 @@ export default {
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
   },
 
-  css: [],
+  css: [
+    "@mdi/font/css/materialdesignicons.css",
+    "@fontsource/roboto/400.css",
+    "@fontsource/roboto/500.css",
+    "@fontsource/roboto/700.css",
+  ],
   plugins: [],
   components: true,
   buildModules: ["@nuxtjs/vuetify"],
   modules: ["nuxt-socket-io"],
   vuetify: {
+    defaultAssets: false,
     customVariables: ["~/assets/variables.scss"],
     theme: {
       dark: true,
@@ -48,8 +54,9 @@ export default {
   io: {
     sockets: [
       {
-        name: "main",
-        url: process.env.VUE_APP_SOCKET_URI,
+        name: "service",
+        url: process.env.NUXT_ENV_SOCKET_URI,
+        default: true,
       },
     ],
   },

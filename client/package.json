@@ -12,10 +12,14 @@
     "core-js": "^3.15.1",
     "nuxt": "^2.15.7",
     "nuxt-socket-io": "^1.1.24",
-    "vuetify": "^2.5.5"
+    "vuetify": "^2.5.5",
+    "@fontsource/roboto": "^4.5.1",
+    "@mdi/font": "^6.5.95"
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "^1.12.1",
-    "webpack": "^4.46.0"
+    "webpack": "^4.46.0",
+    "eslint-config-prettier": "^8.3.0",
+    "prettier": "^2.3.2"
   }
 }

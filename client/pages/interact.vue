@@ -80,6 +80,7 @@ export default {
       "#000000",
     ],
     segments: [],
+    socket: null,
   }),
   methods: {
     setState(state) {
@@ -102,16 +103,9 @@ export default {
       }
     },
   },
-  computed: {
-    segmentHeight() {
-      const segmentDOM = document.getElementById("filterSection");
-      return segmentDOM ? segmentDOM.offsetHeight : 0;
-    },
-  },
   mounted() {
-    this.socket = this.$nuxtSocket({
-      channel: "/",
-    });
+    console.log(this.$config.socketPath);
+    this.socket = this.$nuxtSocket({ name: "service" });
     this.socket.on("segments", (msg) => {
       this.segments = msg;
     });
@@ -136,7 +130,7 @@ export default {
 .segment {
   border-radius: 30px;
   margin: 3px;
-  user-select: none; 
+  user-select: none;
 }
 .segment-block {
   display: inline-block;
