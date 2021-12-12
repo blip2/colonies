@@ -26,6 +26,8 @@ services:
     restart: always
     ports:
       - "3000:3000"
+    environment:
+      - VUE_APP_SOCKET_URI=http://localhost:5000
     networks:
       - colonies
 
