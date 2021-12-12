@@ -18,11 +18,11 @@ var segments = require("./segments");
 var state = "Random";
 var manual_change = new Date();
 
-// Routing and static files
-app.get("/", function (req, res) {
-  res.send("colonies-service");
-});
 app.use(express.static(path.join(__dirname, "public")));
+
+app.get("/api/segments", function (req, res) {
+  res.send(segments.all_segments());
+});
 
 io.on("connection", function (socket) {
   // On client connect send all of the segments
@@ -90,7 +90,8 @@ var tick = function () {
   }
 };
 
-setInterval(tick, 1000);
-
 httpServer.listen(5000);
-console.log("started colonies service")
+
+segments.all_segments();
+setInterval(tick, 1000);
+console.log("started colonies service");

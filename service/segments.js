@@ -92,6 +92,12 @@ function random_change() {
   return;
 }
 
+const api = () => {
+  return axios.create({
+    timeout: 1000,
+  });
+};
+
 const handle_errors = (promise) => {
   return promise.catch((error) => {
     console.log("Error Communicating with Arduino: ", error.message);
@@ -130,14 +136,14 @@ function update_segment(segment) {
         hw.seq +
         "/0/0/0/0/";
     }
-    handle_errors(axios.get(url));
+    handle_errors(api().get(url));
   }
 }
 
 function reset_all() {
   hardware.CONTROLLERS.forEach(function (ip) {
     var url = "http://" + ip + "/arduino/off/0";
-    handle_errors(axios.get(url));
+    handle_errors(api().get(url));
   });
 }
 

@@ -16,8 +16,6 @@ COPY ./client/ ./
 FROM client-install as client-build
 RUN npm run generate
 
-FROM nginx:1.19-alpine as web
+FROM service as web
 
-RUN rm /etc/nginx/conf.d/default.conf
-COPY nginx.conf /etc/nginx/conf.d/
-COPY --from=client-build /client/dist/ /dist/
+COPY --from=client-build /client/dist/ /service/public/

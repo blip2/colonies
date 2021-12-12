@@ -4,28 +4,13 @@ services:
   service:
     build:
       context: .
-      target: service
+      target: web
     command: node colonies
     restart: always
     ports:
-      - "127.0.0.1:5000:5000"
+      - "80:5000"
     networks:
       - colonies
-
-  web:
-    build:
-      context: .
-      target: web
-    command: nginx -g 'daemon off;'
-    restart: always
-    ports:
-      - "127.0.0.1:80:80"
-    networks:
-      - colonies
-    environment:
-      - VUE_APP_SOCKET_URI=/api
-    depends_on:
-      - server
 
 networks:
   colonies:
