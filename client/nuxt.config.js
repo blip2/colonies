@@ -22,7 +22,7 @@ export default {
   plugins: [],
   components: true,
   buildModules: ["@nuxtjs/vuetify"],
-  modules: [],
+  modules: ["nuxt-socket-io"],
   vuetify: {
     customVariables: ["~/assets/variables.scss"],
     theme: {
@@ -42,7 +42,15 @@ export default {
   },
   build: {},
   server: {
-    host: '0',
+    host: "0",
     port: 3000,
+  },
+  io: {
+    sockets: [
+      {
+        name: "main",
+        url: process.env.VUE_APP_SOCKET_URI,
+      },
+    ],
   },
 };
