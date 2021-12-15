@@ -51,3 +51,5 @@ echo 'Copying configuration files...'
 cp ./dots-update.cron /etc/cron.d/dots-update
 
 cp ./autostart /etc/xdg/lxsession/LXDE-pi/autostart
+
+chown -R pi:pi /home/pi/colonies/
