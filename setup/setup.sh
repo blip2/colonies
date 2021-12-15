@@ -24,6 +24,11 @@ then
   apt-get --assume-yes install unclutter >>setup.log
 fi
 
+if [ $(dpkg-query -W -f='${Status}' autossh 2>/dev/null | grep -c "ok installed") -eq 0 ];
+then
+  apt-get --assume-yes install autossh >>setup.log
+fi
+
 if [ $(dpkg-query -W -f='${Status}' unattended-upgrades 2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
   apt-get --assume-yes install unattended-upgrades >>setup.log
@@ -49,6 +54,7 @@ adduser pi docker
 echo 'Copying configuration files...'
 
 cp ./dots-update.cron /etc/cron.d/dots-update
+chmod u+x ./check-tunnel.sh
 
 cp ./autostart /etc/xdg/lxsession/LXDE-pi/autostart
 
