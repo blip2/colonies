@@ -2,15 +2,8 @@ version: "3.8"
 
 services:
   service:
-    build:
-      context: .
-      target: web
+    image: https://ghcr.io/blip2/colonies
     command: node colonies
     restart: always
     ports:
-      - "80:5000"
-    networks:
-      - colonies
-
-networks:
-  colonies:
+      - "80:5000" 

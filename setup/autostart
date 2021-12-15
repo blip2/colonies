@@ -3,5 +3,5 @@
 @xset s off
 @xset -dpms
 @xset s noblank
-@chromium-browser --kiosk http://localhost/
-@unclutter -idle 0.1 -root
+@chromium-browser --kiosk http://localhost/interact
+@unclutter -idle 1 -root
