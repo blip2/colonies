@@ -1,4 +1,0 @@
-SHELL=/bin/sh
-PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-5 5 * * *   root    shutdown -r
-* * * * *   root    bash /home/pi/colonies/setup/check-tunnel.sh

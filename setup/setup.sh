@@ -53,7 +53,7 @@ adduser pi docker
 
 echo 'Copying configuration files...'
 
-cp ./dots-update.cron /etc/cron.d/dots-update
+cp ./colonies.cron /etc/cron.d/colonies
 chmod u+x ./check-tunnel.sh
 
 cp ./autostart /etc/xdg/lxsession/LXDE-pi/autostart
