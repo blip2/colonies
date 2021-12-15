@@ -44,13 +44,10 @@ then
 fi
 
 curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+adduser pi docker
 
 echo 'Copying configuration files...'
 
 cp ./dots-update.cron /etc/cron.d/dots-update
 
 cp ./autostart /etc/xdg/lxsession/LXDE-pi/autostart
-
-echo 'Starting colonies...'
-cd /home/pi/colonies/
-docker-compose -f docker-compose.prod.yml up --build -d
