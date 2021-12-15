@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   service:
-    image: https://ghcr.io/blip2/colonies
+    image: https://ghcr.io/blip2/colonies:latest
     command: node colonies
     restart: always
     ports:
