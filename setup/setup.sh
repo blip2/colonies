@@ -19,14 +19,9 @@ then
   apt-get --assume-yes install curl >>setup.log
 fi
 
-if [ $(dpkg-query -W -f='${Status}' dnsmasq 2>/dev/null | grep -c "ok installed") -eq 0 ];
+if [ $(dpkg-query -W -f='${Status}' unclutter 2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
-  apt-get --assume-yes install dnsmasq >>setup.log
-fi
-
-if [ $(dpkg-query -W -f='${Status}' apache2 2>/dev/null | grep -c "ok installed") -eq 0 ];
-then
-  apt-get --assume-yes install apache2 >>setup.log
+  apt-get --assume-yes install unclutter >>setup.log
 fi
 
 if [ $(dpkg-query -W -f='${Status}' unattended-upgrades 2>/dev/null | grep -c "ok installed") -eq 0 ];
@@ -34,40 +29,28 @@ then
   apt-get --assume-yes install unattended-upgrades >>setup.log
 fi
 
-if [ $(dpkg-query -W -f='${Status}' nodejs 2>/dev/null | grep -c "ok installed") -eq 0 ];
+if [ $(dpkg-query -W -f='${Status}' vim 2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
-  curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash - >>setup.log
-  sudo apt-get --assume-yes install -y nodejs >>setup.log
+  apt-get --assume-yes install vim >>setup.log
 fi
+
+if [ $(dpkg-query -W -f='${Status}' docker 2>/dev/null | grep -c "ok installed") -eq 0 ];
+then
+  apt-get --assume-yes install ca-certificates curl gnupg lsb-release
+  curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+  echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  apt-get update
+  apt-get --assume-yes install docker-ce docker-ce-cli containerd.io
+fi
+
+curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 
 echo 'Copying configuration files...'
 
-cp ./dots.dnsmasq.conf /etc/dnsmasq.d/
-service dnsmasq restart
-
-cp ./dots.init.sh /etc/init.d/dots-server
-chmod 755 /etc/init.d/dots-server
-update-rc.d dots-server defaults
-
 cp ./dots-update.cron /etc/cron.d/dots-update
-chmod u+x ./setup.sh
-chmod u+x ./check-tunnel.sh
 
-a2enmod rewrite ssl >>setup.log
-cp ./dots.apache2.conf /etc/apache2/sites-enabled/000-default.conf
+cp ./autostart /etc/xdg/lxsession/LXDE-pi/autostart
 
-echo 'Creating/checking tunnel...'
-bash check-tunnel.sh >>setup.log
-
-echo 'Copying splash pages...'
-
-cp -rf ../splash/* /var/www/html/
-service apache2 restart
-
-echo 'Installing npm packages...'
-
-cd ../server/
-npm install >>setup.log 2>&1
-
-echo 'Starting dots and boxes...'
-service dots-server restart
+echo 'Starting colonies...'
+cd /home/pi/colonies/
+docker-compose -f docker-compose.prod.yml up --build -d
