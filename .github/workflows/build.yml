@@ -2,6 +2,11 @@ name: build
 
 on:
   push:
+    paths:
+      - 'client/**'
+      - 'service/**'
+      - 'Dockerfile'
+      - '.github/workflows/build.yml'
     branches:
       - "main"
 
