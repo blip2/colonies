@@ -20,6 +20,8 @@ The SegmentController.ino code provides rudimentary direct control of the hardwa
 
 The server component is an node/express/socket.io service which translates from a more user friendly REST API (used by the frontend and by end-users) to communicate with the Yún controllers.
 
+The lighting will turn off automatically outside of 9am to 11pm weekdays or 20 minutes after a user interaction outside these times.
+
 ## Networking
 
 The six Arduino Yún have a wired ethernet connection to an 8-port switch which is connected directly to the headend server. There is a network port at high level on the cable basket next to the installation which connects directly to the wall port in the office.
