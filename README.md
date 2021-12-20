@@ -40,6 +40,15 @@ Server configuration:
 
 SSH to each Yun is possible from the server with: `ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 root@192.168.10.101`
 
+## Wiring
+
+Wiring colours used in the multicore cables within the installation:
+- Yellow/Orange: negative (supplemented with black single core for longer runs)
+- White/Blue/Purple: positive (supplemented with red single core for longer runs)
+- Green/Black/Brown: SPI control signal (connected to each of the three strips running in each tube, 4 strips in sequence in separate tubes)
+
+The colors above connect to wiring from the LED strip as follows: white (negative), red (positive), green (SPI control)
+
 ## Development
 
 Configured as Docker containers with docker installed `docker-compose up` should start the client (nuxt) in development mode and service (node) in the background.
