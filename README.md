@@ -38,7 +38,7 @@ The server runs on a RaspberryPi 4 running Raspbian which is connected to the of
 
 Server configuration:
 - Wired connection - e4:5f:01:4a:00:6a - 192.168.10.1
-- Wireless connection - e4:5f:01:4a:00:6b - 192.168.65.2
+- Wireless connection - e4:5f:01:4a:00:6b - 192.168.67.254
 
 SSH to each Yun is possible from the server with: `ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 root@192.168.10.101`
 
