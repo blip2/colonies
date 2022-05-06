@@ -66,14 +66,14 @@ CRGB leds[NUM_STRIPS][NUM_LEDS];
  */
 
 // Yun 1: B4218AF06D0B (controller 0)
-// 1.2 row    8l (5): // 32+31+29+30 (checked)
-// 1.5 row    4l (3): // 32+31+31+30 (checked)
+// 1.2 row    8l (5): // 30+31+29+30 (checked)
+// 1.5 row    4l (3): // 31+31+31+30 (checked)
 // 1.8 row    6l (4): // 32+28+28+30 (checked)
 
 // Yun 2: B4218AF069F6 (controller 1) (channel 7 instead of 8)
 // 2.2 row    2l (2): //32+28+30+30 (checked)
 // 2.5 column 0  (1): //31+30+30+30 (checked)
-// 2.7 row    0l (1): //29+30+30+30 (checked)
+// 2.7 row    0l (1): //28+30+30+30 (checked)
 
 // Yun 3: B4218AF069F4 (controller 2)
 // 3.2 column 6 (4):  //31+30+30+27 (checked)
@@ -104,14 +104,14 @@ int seglen[][NUM_SEGMENTS] = {
 //  {1,1,1,1},
 
 // Yun 1: B4218AF06D0B (all checked)
-//  {32,31,29,30},
-//  {32,31,31,30},
+//  {30,31,28,30},
+//  {31,31,31,30},
 //  {32,28,28,30},
 
 // Yun 2: B4218AF069F6 (channel 7 instead of 8)
 //  {32,28,31,30},
 //  {31,30,30,30},
-//  {29,30,30,30},
+//  {28,29,30,30},
 
 // Yun 3: B4218AF069F4 (all checked)
 //  {31,30,30,30},
@@ -260,6 +260,3 @@ void process(BridgeClient client) {
   }
 
 }
-
-
-
