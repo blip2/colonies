@@ -30,22 +30,22 @@
     </v-toolbar>
 
     <v-container>
-      <v-row justify="center" align="center">
-        <v-col cols="12">
+      <v-row
+        v-for="row in [0, 1, 2, 3, 4, 5, 6, 7, 8]"
+        v-bind:key="row"
+        class="flex-nowrap"
+      >
+        <v-col
+          v-for="seg in rowSegments(row)"
+          v-bind:key="seg.id"
+          @click="segmentClick(seg)"
+          :class="'fill-height segment-cell segment-cell-' + seg.type"
+        >
           <div
-            v-for="row in [0, 1, 2, 3, 4, 5, 6, 7, 8]"
-            v-bind:key="row"
-            class="segment-row"
+            :style="'background-color: ' + seg.color"
+            :class="'segment segment-' + seg.type"
           >
-            <div
-              v-for="seg in rowSegments(row)"
-              v-bind:key="seg.id"
-              @click="segmentClick(seg)"
-              :style="'background-color: ' + seg.color"
-              :class="'segment segment-' + seg.type"
-            >
-              &nbsp;
-            </div>
+            &nbsp;
           </div>
         </v-col>
       </v-row>
@@ -77,7 +77,7 @@ export default {
       "#0000FF",
       "#FF00AA",
       "#CCCCCC",
-      "#000000",
+      "#333333",
     ],
     segments: [],
     socket: null,
@@ -97,7 +97,7 @@ export default {
         .sort(sortRow);
     },
     segmentClick(seg) {
-      if (seg.type != "block") {
+      if (!seg.type.includes("block")) {
         seg.color = this.color;
         this.socket.emit("segment-change", seg);
       }
@@ -122,29 +122,27 @@ export default {
 </script>
 
 <style scoped>
-.segment-row {
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: center;
+.segment-cell {
+  padding: 0;
 }
 .segment {
-  border-radius: 30px;
-  margin: 3px;
+  margin: 3px !important;
+  position: sticky;
+  border-radius: 12px;
   user-select: none;
+  min-height: 80px;
 }
-.segment-block {
-  display: inline-block;
-  flex-grow: 10;
-  min-height: 180px;
-  background-color: black !important;
+.segment-horiz,
+.segment-hblock,
+.segment-cell-horiz,
+.segment-cell-hblock {
+  min-height: 24px;
 }
-.segment-vert {
-  display: inline-block;
-  flex-grow: 1;
-}
-.segment-horiz {
-  display: inline-block;
-  flex-grow: 10;
-  height: 20px;
+.segment-vert,
+.segment-hblock,
+.segment-cell-vert,
+.segment-cell-hblock {
+  width: 24px;
+  flex-grow: 0;
 }
 </style>

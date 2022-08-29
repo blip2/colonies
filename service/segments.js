@@ -12,7 +12,7 @@ var colors = {
   "#0000FF": { h: 150, s: 255, v: 225 },
   "#FF00AA": { h: 220, s: 255, v: 225 },
   "#CCCCCC": { h: 0, s: 0, v: 225 },
-  "#000000": { h: 0, s: 0, v: 0 },
+  "#333333": { h: 0, s: 0, v: 0 },
 };
 
 function Segment(id, row, col, type, color) {
@@ -36,28 +36,35 @@ function all_segments(clear = false) {
 
   var h_rows = [0, 2, 4, 6, 8];
   var h_cols = [1, 3, 5, 7, 9, 11, 13];
+  var hb_cols = [0, 2, 4, 6, 8, 10, 12, 14];
   var v_rows = [1, 3, 5, 7];
   var v_cols = [0, 2, 4, 6, 8, 10, 12, 14];
-  var b_cols = [1, 3, 5, 7, 9, 11, 13];
+  var vb_cols = [1, 3, 5, 7, 9, 11, 13];
 
   for (row in h_rows) {
     for (col in h_cols) {
       segments.push(
-        new Segment(i, h_rows[row], h_cols[col], "horiz", "#000000")
+        new Segment(i, h_rows[row], h_cols[col], "horiz", "#333333")
+      );
+      i++;
+    }
+    for (col in hb_cols) {
+      segments.push(
+        new Segment(i, h_rows[row], hb_cols[col], "hblock", "#000000")
       );
       i++;
     }
   }
   for (row in v_rows) {
-    for (col in b_cols) {
+    for (col in v_cols) {
       segments.push(
-        new Segment(i, v_rows[row], b_cols[col], "block", "#333333")
+        new Segment(i, v_rows[row], v_cols[col], "vert", "#333333")
       );
       i++;
     }
-    for (col in v_cols) {
+    for (col in vb_cols) {
       segments.push(
-        new Segment(i, v_rows[row], v_cols[col], "vert", "#000000")
+        new Segment(i, v_rows[row], vb_cols[col], "vblock", "#000000")
       );
       i++;
     }
@@ -100,7 +107,7 @@ const api = () => {
 
 const handle_errors = (promise) => {
   return promise.catch((error) => {
-    console.log("Error Communicating with Arduino: ", error.message);
+    //console.log("Error Communicating with Arduino: ", error.message);
   });
 };
 
