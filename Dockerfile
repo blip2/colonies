@@ -5,7 +5,7 @@ COPY ./service/package*.json ./
 RUN npm install
 COPY ./service/ ./
 
-FROM node:14-alpine as client-install
+FROM node:16-alpine as client-install
 
 WORKDIR /client/
 
