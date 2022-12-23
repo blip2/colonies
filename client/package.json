@@ -9,12 +9,12 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
-    "core-js": "^3.25.0",
+    "core-js": "^3.26.1",
     "nuxt": "^2.15.8",
     "nuxt-socket-io": "^2.0.3",
-    "vuetify": "^2.6.9",
+    "vuetify": "^2.6.13",
     "@fontsource/roboto": "^4.5.8",
-    "@mdi/font": "^7.0.96"
+    "@mdi/font": "^7.1.96"
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "^1.12.1",
