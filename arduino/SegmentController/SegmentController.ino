@@ -2,6 +2,7 @@
   Dots and Boxes / Colonies installation - Segment Controller
   Written for Arduino Yún
   Francesco Anselmo (August 2017)
+  Ben Hussey (January 2023)
 
   Valid API commands:
   // http://192.168.10.104/arduino/segment/1/0/150/255/255/0/
@@ -51,100 +52,73 @@ BridgeServer server;
 
 CRGB leds[NUM_STRIPS][NUM_LEDS];
 
-/*
+/* X indicates physical problem
  *     0  1  2  3  4  5  6  7  8  9 10 11 12 13 14
  * l 0 o --- o --- o --- o --- o --- o --- o --- o (1) r
- *   1 |     |     |     |     |     |     |     |
- *   2 o --- o --- o --- o --- o --- o --- o --- o (2)
- *   3 |     |     |     |     |     |     |     |
+ *   1 X     |     |     |     |     |     |     |
+ *   2 o --- o XXX o --- o --- o --- o --- o --- o (2)
+ *   3 X     |     |     |     |     |     |     |
  *   4 o --- o --- o --- o --- o --- o --- o --- o (3)
- *   5 |     |     |     |     |     |     |     |
+ *   5 X     |     |     |     |     |     |     |
  *   6 o --- o --- o --- o --- o --- o --- o --- o (4)
- *   7 |     |     |     |     |     |     |     |
+ *   7 X     |     |     |     |     |     |     |
  *   8 o --- o --- o --- o --- o --- o --- o --- o (5)
  *    (1)   (2)   (3)   (4)   (5)   (6)   (7)   (8)
  */
 
-// Yun 1: B4218AF06D0B (controller 0)
-// 1.2 row    8l (5): // 30+31+29+30 (checked)
-// 1.5 row    4l (3): // 31+31+31+30 (checked)
-// 1.8 row    6l (4): // 32+28+28+30 (checked)
-
-// Yun 2: B4218AF069F6 (controller 1) (channel 7 instead of 8)
-// 2.2 row    2l (2): //32+28+30+30 (checked)
-// 2.5 column 0  (1): //31+30+30+30 (checked)
-// 2.7 row    0l (1): //28+30+30+30 (checked)
-
-// Yun 3: B4218AF069F4 (controller 2)
-// 3.2 column 6 (4):  //31+30+30+27 (checked)
-// 3.5 column 4 (3):  //31+30+30+30 (checked)
-// 3.8 column 2 (2):  //31+30+30+30 (checked)
-
-// Yun 4: B4218AF06C00 (controller 3)
-// 4.2 column 12 (7):  30+30+30+30 (checked)
-// 4.5 column  8 (5):  30+30+30+30 (checked)
-// 4.8 column 10 (6):  29+30+30+30 (checked)
-
-// Yun 5: B4218AF06D1C (controller 4)
-// 5.2 column 14 (8):  31+30+30+30 (checked)
-// 5.5 row    0r (1):  29+31+30+0  (checked)
-// 5.8 row    2r (2):  29+28+31+0  (checked)
-
-// Yun 6: B4218AF06D14 (controller 5)
-// 6.2 row    4r (3):  31+31+30+0  (checked)
-// 6.5 row    6r (4):  32+28+30+0  (checked)
-// 6.8 row    8r (5):  29+28+31+0  (checked)
-
 // array of segment lengths
 int seglen[][NUM_SEGMENTS] = {
 
-//  Test
-//  {1,1,1,1},
-//  {1,1,1,1},
-//  {1,1,1,1},
-
-// Yun 1: B4218AF06D0B (all checked)
+// Yun 1: B4218AF06D0B (controller 0)
+// 1.2 row    8l (5): // 30+31+28+30 (checked)
+// 1.5 row    4l (3): // 31+31+31+30 (checked)
+// 1.8 row    6l (4): // 32+28+28+30 (checked)
 //  {30,31,28,30},
 //  {31,31,31,30},
 //  {32,28,28,30},
 
-// Yun 2: B4218AF069F6 (channel 7 instead of 8)
+// Yun 2: B4218AF069F6 (controller 1) (channel 7 instead of 8)
+// 2.2 row    2l (2): //32+28+31+30 (checked)
+// 2.5 column 0  (1): //31+30+30+30 (checked)
+// 2.7 row    0l (1): //28+28+30+30 (updated 2023)
+// row 0l - there is mismatch between the strip length between segment 1 and 2 - requires physical fix
 //  {32,28,31,30},
 //  {31,30,30,30},
-//  {28,29,30,30},
+//  {28,28,30,30},
 
-// Yun 3: B4218AF069F4 (all checked)
+// Yun 3: B4218AF069F4 (controller 2)
+// 3.2 column 6 (4):  //31+30+30+30 (checked)
+// 3.5 column 4 (3):  //31+30+30+30 (updated 2023)
+// 3.8 column 2 (2):  //31+30+30+30 (checked)
 //  {31,30,30,30},
 //  {31,30,30,30},
 //  {31,30,30,30},
 
-// Yun 4: B4218AF06C00 (all checked)
+// Yun 4: B4218AF06C00 (controller 3)
+// 4.2 column 12 (7):  31+30+30+30 (checked)
+// 4.5 column  8 (5):  31+30+30+30 (checked)
+// 4.8 column 10 (6):  31+30+30+30 (updated 2023)
 //  {31,30,30,30},
 //  {31,30,30,30},
-//  {30,30,30,30},
+//  {31,30,30,30},
 
-// Yun 5: B4218AF06D1C
-//  {31,30,30,30},
+// Yun 5: B4218AF06D1C (controller 4)
+// 5.2 column 14 (8):  31+30+31+30 (updated 2023)
+// 5.5 row    0r (1):  29+31+30+0  (checked)
+// 5.8 row    2r (2):  29+28+31+0  (checked)
+//  {31,30,31,30},
 //  {29,31,30,0},
 //  {29,28,31,0},
 
-// Yun 6: B4218AF06D14
-  {31,31,30,0},
-  {32,28,30,0},
-  {29,28,31,0},
+// Yun 6: B4218AF06D14 (controller 5)
+// 6.2 row    4r (3):  31+32+30+0  (updated 2023)
+// 6.5 row    6r (4):  32+28+31+0  (updated 2023)
+// 6.8 row    8r (5):  29+28+32+0  (updated 2023)
+  {31,32,30,0},
+  {32,28,31,0},
+  {29,28,32,0},
 
 };
-
-//int seglen[][NUM_SEGMENTS] = {
-//  {1,1,1,1},
-//  {1,1,1,1},
-//  {1,1,1,1},
-//  {1,1,1,1},
-//  {1,1,1,1},
-//  {1,1,1,1},
-//  {1,1,1,1},
-//  {1,1,1,1},
-//};
 
 uint8_t gHue = 0; // rotating "base color" used by many of the patterns
 int mode = 0; // 0 = off, 1=test, 2=segment, 3=rainbow
@@ -156,7 +130,7 @@ void setup() {
 //  FastLED.addLeds<LED_TYPE, 4>(leds[2], NUM_LEDS);
   FastLED.addLeds<LED_TYPE, 5, COLOR_ORDER>(leds[1], NUM_LEDS);
 //  FastLED.addLeds<LED_TYPE, 6>(leds[4], NUM_LEDS);
-//  FastLED.addLeds<LED_TYPE, 7, COLOR_ORDER>(leds[2], NUM_LEDS);
+ // FastLED.addLeds<LED_TYPE, 7, COLOR_ORDER>(leds[2], NUM_LEDS);
   FastLED.addLeds<LED_TYPE, 8, COLOR_ORDER>(leds[2], NUM_LEDS);
 //  FastLED.addLeds<LED_TYPE, 9>(leds[7], NUM_LEDS);
   //FastLED.addLeds<LED_TYPE, 10>(leds[2], NUM_LEDS);
@@ -165,7 +139,7 @@ void setup() {
   FastLED.setBrightness(BRIGHTNESS);
 
   Bridge.begin();
-  server.listenOnLocalhost();
+  //server.listenOnLocalhost();
   server.begin();
 
   initStrip();

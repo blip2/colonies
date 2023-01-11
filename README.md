@@ -38,13 +38,16 @@ The server runs on a RaspberryPi 4 running Raspbian which is connected to the of
 
 Server configuration:
 - Wired connection - e4:5f:01:4a:00:6a - 192.168.10.1
-- Wireless connection - e4:5f:01:4a:00:6b - 192.168.53.253
+- Wireless connection - e4:5f:01:4a:00:6b - 192.168.53.254
 
-SSH to each Yun is possible from the server with: `ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 root@192.168.10.101`
+SSH to each Yun is possible from the server with: `ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -oHostKeyAlgorithms=+ssh-dss root@192.168.10.101`
 
-To port forward to the Yun web interface use: ` ssh -L 8080:192.168.10.101:80 pi@192.168.53.254`
+To port forward to the Yun web interface use: `ssh -L 8080:192.168.10.101:80 pi@192.168.53.254`
 
-Reprogramming the Yun is easiest if you connect directly to the built-in wireless access point.
+The wireless interface on all of the Yuns was disabled in January 2023 via the following method to reduce 2.4GHz RF noise adjacent to tenants doing IoT work.
+
+- edit file /etc/config/wireless and change line option disabled 0 to option disabled 1
+- reboot
 
 ## Wiring
 
@@ -55,7 +58,21 @@ Wiring colours used in the multicore cables within the installation:
 
 The colors above connect to wiring from the LED strip as follows: white (negative), red (positive), green (SPI control)
 
-## Development
+## Arduino Development
+
+The Arduino IDE should be used for any changes/development of the controller code. The following libraries are used by SegmentController.ino:
+
+- FastLED
+- Bridge
+
+Once compiled with the Arduino IDE, the .hex file can be `scp`ed onto the Yun (via the Pi) and transferred to the microcontroller with the following commands:
+
+`/usr/bin/merge-sketch-with-bootloader.lua SegmentControler.ino.hex`
+`/usr/bin/run-avrdude SegmentControler.ino.hex`
+
+To fully reset both the linux and microcontroller use `reset-mcu` and `reboot` while SSHed into the Yun - run-avrdude also performs a microcontroller reset.
+
+## Web Development
 
 Configured as Docker containers with docker installed `docker-compose up` should start the client (nuxt) in development mode and service (node) in the background.
 
