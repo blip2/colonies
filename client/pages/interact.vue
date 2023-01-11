@@ -23,6 +23,9 @@
         small
         :style="color == c ? 'border: 5px solid gold;' : ''"
       ></v-btn>
+      <v-btn outlined class="ml-3" color="blue" @click="setAll()">
+        Set All
+      </v-btn>
       <v-btn outlined class="ml-3" color="red" @click="clearAll()">
         Reset
       </v-btn>
@@ -85,6 +88,14 @@ export default {
   methods: {
     setState(state) {
       this.socket.emit("state", state);
+    },
+    setAll() {
+      this.segments.forEach((seg) => {
+        if (!seg.type.includes("block")) {
+          seg.color = this.color;
+          this.socket.emit("segment-change", seg);
+        }
+      });
     },
     clearAll() {
       this.socket.emit("reset");
