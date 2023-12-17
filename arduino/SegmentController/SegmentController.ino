@@ -2,7 +2,7 @@
   Dots and Boxes / Colonies installation - Segment Controller
   Written for Arduino Yún
   Francesco Anselmo (August 2017)
-  Ben Hussey (January 2023)
+  Ben Hussey (December 2023)
 
   Valid API commands:
   // http://192.168.10.104/arduino/segment/1/0/150/255/255/0/
@@ -54,9 +54,9 @@ CRGB leds[NUM_STRIPS][NUM_LEDS];
 
 /* X indicates physical problem
  *     0  1  2  3  4  5  6  7  8  9 10 11 12 13 14
- * l 0 o --- o --- o --- o --- o --- o --- o --- o (1) r
+ * l 0 o --- o --- o XXX o --- o --- o --- o --- o (1) r
  *   1 X     |     |     |     |     |     |     |
- *   2 o --- o XXX o --- o --- o --- o --- o --- o (2)
+ *   2 o --- o --- o --- o --- o --- o --- o --- o (2)
  *   3 X     |     |     |     |     |     |     |
  *   4 o --- o --- o --- o --- o --- o --- o --- o (3)
  *   5 X     |     |     |     |     |     |     |
@@ -65,6 +65,8 @@ CRGB leds[NUM_STRIPS][NUM_LEDS];
  *   8 o --- o --- o --- o --- o --- o --- o --- o (5)
  *    (1)   (2)   (3)   (4)   (5)   (6)   (7)   (8)
  */
+
+// 28 horizontal, 32 vertical = 60 totals
 
 // array of segment lengths
 int seglen[][NUM_SEGMENTS] = {
@@ -77,14 +79,14 @@ int seglen[][NUM_SEGMENTS] = {
 //  {31,31,31,30},
 //  {32,28,28,30},
 
-// Yun 2: B4218AF069F6 (controller 1) (channel 7 instead of 8)
+// Yun 2: B4218AF069F6 (controller 1) (channel 7 instead of 8, 4 instead of 5)
 // 2.2 row    2l (2): //32+28+31+30 (checked)
-// 2.5 column 0  (1): //31+30+30+30 (checked)
+// 2.4 column 0  (1): //31+30+30+30 (checked)
 // 2.7 row    0l (1): //28+28+30+30 (updated 2023)
-// row 0l - there is mismatch between the strip length between segment 1 and 2 - requires physical fix
-//  {32,28,31,30},
-//  {31,30,30,30},
-//  {28,28,30,30},
+// row 0l - third segment (col 5) missing due to failure - requires physical fix
+  {32,28,31,30},
+  {31,30,30,30},
+  {28,29,31,30},
 
 // Yun 3: B4218AF069F4 (controller 2)
 // 3.2 column 6 (4):  //31+30+30+30 (checked)
@@ -114,9 +116,9 @@ int seglen[][NUM_SEGMENTS] = {
 // 6.2 row    4r (3):  31+32+30+0  (updated 2023)
 // 6.5 row    6r (4):  32+28+31+0  (updated 2023)
 // 6.8 row    8r (5):  29+28+32+0  (updated 2023)
-  {31,32,30,0},
-  {32,28,31,0},
-  {29,28,32,0},
+//  {31,32,30,0},
+//  {32,28,31,0},
+//  {29,28,32,0},
 
 };
 
@@ -128,10 +130,10 @@ void setup() {
   FastLED.addLeds<LED_TYPE, 2, COLOR_ORDER>(leds[0], NUM_LEDS);
 //  FastLED.addLeds<LED_TYPE, 3>(leds[1], NUM_LEDS);
 //  FastLED.addLeds<LED_TYPE, 4>(leds[2], NUM_LEDS);
-  FastLED.addLeds<LED_TYPE, 5, COLOR_ORDER>(leds[1], NUM_LEDS);
+  FastLED.addLeds<LED_TYPE, 4, COLOR_ORDER>(leds[1], NUM_LEDS);
 //  FastLED.addLeds<LED_TYPE, 6>(leds[4], NUM_LEDS);
- // FastLED.addLeds<LED_TYPE, 7, COLOR_ORDER>(leds[2], NUM_LEDS);
-  FastLED.addLeds<LED_TYPE, 8, COLOR_ORDER>(leds[2], NUM_LEDS);
+  FastLED.addLeds<LED_TYPE, 7, COLOR_ORDER>(leds[2], NUM_LEDS);
+ // FastLED.addLeds<LED_TYPE, 8, COLOR_ORDER>(leds[2], NUM_LEDS);
 //  FastLED.addLeds<LED_TYPE, 9>(leds[7], NUM_LEDS);
   //FastLED.addLeds<LED_TYPE, 10>(leds[2], NUM_LEDS);
 
