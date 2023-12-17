@@ -67,8 +67,8 @@ The Arduino IDE should be used for any changes/development of the controller cod
 
 Once compiled with the Arduino IDE, the .hex file can be `scp`ed onto the Yun (via the Pi) and transferred to the microcontroller with the following commands:
 
-`/usr/bin/merge-sketch-with-bootloader.lua SegmentControler.ino.hex`
-`/usr/bin/run-avrdude SegmentControler.ino.hex`
+- `/usr/bin/merge-sketch-with-bootloader.lua SegmentControler.ino.hex`
+- `/usr/bin/run-avrdude SegmentControler.ino.hex`
 
 To fully reset both the linux and microcontroller use `reset-mcu` and `reboot` while SSHed into the Yun - run-avrdude also performs a microcontroller reset.
 

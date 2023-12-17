@@ -31,14 +31,23 @@
             </p>
             <p>
               <strong>Concept and design</strong> -
-              <a href="http://www.installarchive.com/">Install Archive</a> (Luke
-              Currall, Lee Regan)
+              <a href="http://www.installarchive.com/" target="_blank"
+                >Install Archive</a
+              >
+              (Luke Currall, Lee Regan)
             </p>
             <p>
               <strong
                 >Lighting design, interaction design and programming</strong
               >
               - Arup (Francesco Anselmo, Inessa Demidova, Ben Hussey)
+            </p>
+            <p>
+              <strong>Software</strong> - Pull requests on
+              <a href="https://github.com/blip2/colonies/" target="_blank"
+                >github</a
+              >
+              welcome
             </p>
             <p><strong>Fabrication</strong> - Keith Parker Fabrications</p>
             <p>
