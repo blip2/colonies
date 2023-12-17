@@ -194,14 +194,14 @@ var SEGMENTS = [
   {
     ip: CONTROLLERS[1],
     strip: 2,
-    seq: 2,
+    seq: 3,
     row: 0,
     col: 5,
   },
   {
     ip: CONTROLLERS[1],
     strip: 2,
-    seq: 3,
+    seq: 2,
     row: 0,
     col: 7,
   },
