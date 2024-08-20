@@ -50,25 +50,24 @@ echo 'Copying configuration files...'
 cp ./colonies.cron /etc/cron.d/colonies
 chmod u+x ./check-tunnel.sh
 
-cp ./autostart /etc/xdg/lxsession/LXDE-pi/autostart
-
-chown -R pi:pi /home/pi/colonies/
-
 echo 'Creating autostart / desktop icon...'
 
 echo "[Desktop Entry]
 Name=Colonies
-Exec=~/colonies/setup/autostart.sh
+Exec=chromium-browser --enable-pinch --fast --fast-start --kiosk --noerrdialogs --disable-translate --no-first-run --disable-pinch --overscroll-history-navigation=disabled --disable-features=TouchpadOverscrollHistoryNavigation --disable-restore-session-state --disable-infobars --enable-crashpad --start-maximized --kiosk http://localhost/interact
 Type=Application
-Terminal=false" > ~/Desktop/colonies.desktop
-chmod u+x ~/Desktop/colonies.desktop
+Terminal=false" > /home/pi/Desktop/colonies.desktop
+chmod u+x /home/pi/Desktop/colonies.desktop
 
+mkdir -p /home/pi/.config/autostart/
 echo "[Desktop Entry]
 Name=Colonies
-Exec=~/colonies/setup/autostart.sh
+Exec=chromium-browser --enable-pinch --fast --fast-start --kiosk --noerrdialogs --disable-translate --no-first-run --disable-pinch --overscroll-history-navigation=disabled --disable-features=TouchpadOverscrollHistoryNavigation --disable-restore-session-state --disable-infobars --enable-crashpad --start-maximized --kiosk http://localhost/interact
 Type=Application
-Terminal=false" > ~/.config/autostart/colonies.desktop
-chmod u+x ~/.config/autostart/colonies.desktop
+Terminal=false" > /home/pi/.config/autostart/colonies.desktop
+chmod u+x /home/pi/.config/autostart/colonies.desktop
+
+chown -R pi:pi /home/pi/
 
 echo 'Running Docker...'
 
