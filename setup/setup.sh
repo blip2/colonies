@@ -15,7 +15,7 @@ git pull >>setup.log
 echo 'Checking apt packages required are installed...'
 apt-get update >>setup.log
 
-apt-get --assume-yes install curl unclutter autossh unattended-upgrades vim ca-certificates >>setup.log
+apt-get --assume-yes install curl unclutter autossh unattended-upgrades vim ca-certificates netcat-openbsd >>setup.log
 install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc >>setup.log
 chmod a+r /etc/apt/keyrings/docker.asc
