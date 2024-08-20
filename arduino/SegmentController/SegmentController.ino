@@ -54,14 +54,14 @@ CRGB leds[NUM_STRIPS][NUM_LEDS];
 
 /* X indicates physical problem
  *     0  1  2  3  4  5  6  7  8  9 10 11 12 13 14
- * l 0 o --- o --- o XXX o --- o --- o --- o --- o (1) r
+ * l 0 o --- o --- o --- o --- o XXX o XXX o XXX o (1) r
  *   1 X     |     |     |     |     |     |     |
- *   2 o --- o --- o --- o --- o --- o --- o --- o (2)
- *   3 X     |     |     |     |     |     |     |
+ *   2 o --- o --- o --- o --- o XXX o XXX o --- o (2)
+ *   3 X     |     |     |     |     |     |     X
  *   4 o --- o --- o --- o --- o --- o --- o --- o (3)
- *   5 X     |     |     |     |     |     |     |
+ *   5 X     |     |     |     |     |     |     X
  *   6 o --- o --- o --- o --- o --- o --- o --- o (4)
- *   7 X     |     |     |     |     |     |     |
+ *   7 X     |     |     |     |     |     |     X
  *   8 o --- o --- o --- o --- o --- o --- o --- o (5)
  *    (1)   (2)   (3)   (4)   (5)   (6)   (7)   (8)
  */
