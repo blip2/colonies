@@ -80,14 +80,16 @@ class LEDControl:
                     print("Loop Error: ", e)
             self.actions = updated_actions
             self.show()
-            await asyncio.sleep(0)
+            await asyncio.sleep(animation_mult)
 
     async def process_action(self, action):
         if action["action"] == "fill":
-            await self.fill_all(color=action["color"], show=False)
-            return (DONE, action)
-            return (CONTINUE, action)
-        if action["action"] == "set":
+            response = await self.fill_inc(action=action, show=False)
+            if response:
+                return (CONTINUE, response)
+            else:
+                return (DONE, None)
+        if action["action"] == "setall":
             await self.fill_all(color=action["color"], show=False)
             return (CLEAR_ACTIONS, True)
 
@@ -98,8 +100,18 @@ class LEDControl:
             if show:
                 await self.pixels[i]["instance"].show()
 
-    async def fill(self, color):
-        pass
+    async def fill_inc(self, action):
+        if "count" not in action:
+            action["count"] = 0
+
+        with self.pixels[action["line"]]["instance"] as pixels:
+            pixel = action["start"] + action["count"]
+            pixels[pixel] = action["color"]
+
+        action["count"] += 1
+        if action["count"] > int(action["end"] - action["start"]):
+            return None
+        return action
 
     async def show(self):
         for i in self.pixels:
@@ -147,10 +159,7 @@ class ControlServer:
         data = {
             "actions": [
                 {
-                    "action": "fill",
-                    "line": 1,
-                    "start": 0,
-                    "end": 2,
+                    "action": "setall",
                     "color": (255, 0, 0),
                 },
                 {
@@ -167,12 +176,33 @@ class ControlServer:
         # decode json
         if "actions" in data:
             for action in data["actions"]:
-                await self.control.add_action(action)
+                if self.validate_action(action):
+                    await self.control.add_action(action)
+                else:
+                    return JSONResponse(request, {"error": "data parse error"})
         return JSONResponse(request, {"response": "ok"})
 
     async def clear(self, request):
         await self.control.fill(EMPTY)
         return JSONResponse(request, {"response": "ok"})
+
+    def validate_action(self, action):
+        if "action" not in action or "color" not in action:
+            return False
+        if action["action"] not in ["fill", "setall"]:
+            return False
+        if not all(isinstance(color, int) for color in action["color"]):
+            return False
+        if action["action"] == "fill":
+            if "line" not in action or "start" not in action or "end" not in action:
+                return False
+            if action["line"] not in pixels.keys():
+                return False
+            if not isinstance(action["start"], int):
+                return False
+            if not isinstance(action["end"], int):
+                return False
+        return True
 
     def update(self, request):
         if READONLY:
