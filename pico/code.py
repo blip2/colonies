@@ -27,6 +27,8 @@ READONLY = storage.getmount("/").readonly
 HTTP_PORT = 80
 EMPTY = (0, 0, 0)
 MAX_PIXELS = 32 * 4
+
+# maps to strip number
 pixels = {0: {"pin": board.GP0}, 1: {"pin": board.GP1}, 2: {"pin": board.GP2}}
 
 STATIC = 0
@@ -104,7 +106,7 @@ class LEDControl:
         if "count" not in action:
             action["count"] = 0
 
-        with self.pixels[action["line"]]["instance"] as pixels:
+        with self.pixels[action["strip"]]["instance"] as pixels:
             pixel = action["start"] + action["count"]
             pixels[pixel] = action["color"]
 
@@ -164,7 +166,7 @@ class ControlServer:
                 },
                 {
                     "action": "fill",
-                    "line": 1,
+                    "strip": 1,
                     "start": 4,
                     "end": 6,
                     "color": (255, 0, 0),
@@ -194,9 +196,9 @@ class ControlServer:
         if not all(isinstance(color, int) for color in action["color"]):
             return False
         if action["action"] == "fill":
-            if "line" not in action or "start" not in action or "end" not in action:
+            if "strip" not in action or "start" not in action or "end" not in action:
                 return False
-            if action["line"] not in pixels.keys():
+            if action["strip"] not in pixels.keys():
                 return False
             if not isinstance(action["start"], int):
                 return False
