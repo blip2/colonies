@@ -11,6 +11,7 @@ import storage
 import asyncio
 import digitalio
 import neopixel
+import supervisor
 import microcontroller
 import adafruit_connection_manager
 from adafruit_wiznet5k.adafruit_wiznet5k import WIZNET5K
@@ -145,6 +146,8 @@ class ControlServer:
 
         self.server.start(self.eth.pretty_ip(self.eth.ip_address), port=HTTP_PORT)
 
+        print(f"Started server on: {self.eth.pretty_ip(self.eth.ip_address)}:{HTTP_PORT}" )
+
     def hello(self, request):
         return JSONResponse(
             request,
@@ -240,11 +243,15 @@ async def blink(pin):
 
 async def main():
     control = LEDControl()
-    server = ControlServer(control)
-    server_task = asyncio.create_task(server.loop())
-    led_control = asyncio.create_task(control.loop())
-    led_task = asyncio.create_task(blink(board.GP25))
-    await asyncio.gather(server_task, led_control, led_task)
-
+    while True:
+        try:
+            server = ControlServer(control)
+            server_task = asyncio.create_task(server.loop())
+            led_control = asyncio.create_task(control.loop())
+            led_task = asyncio.create_task(blink(board.GP25))
+            await asyncio.gather(server_task, led_control, led_task)
+        except Exception as e:
+            print("Main Error: ", e)
+            supervisor.reload()
 
 asyncio.run(main())
