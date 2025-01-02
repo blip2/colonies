@@ -39,11 +39,16 @@ FORM_HTML_TEMPLATE = """<html lang="en"><body>
   </form>
 </body></html>"""
 
+CONTINUE = 0
+DONE = 1
+CLEAR_ACTIONS = 2
+
 
 class LEDControl:
     def __init__(self):
         self.pixels = pixels
         self.state = STATIC
+        self.actions = []
         for i in self.pixels:
             self.pixels[i]["instance"] = neopixel.NeoPixel(
                 pixels[i]["pin"],
@@ -53,21 +58,54 @@ class LEDControl:
                 pixel_order="BRG",
             )
             self.pixels[i]["values"] = [(0, 0, 0)] * MAX_PIXELS
-        self.fill(EMPTY)
+        self.fill_all(EMPTY)
+
+    async def add_action(self, action):
+        await self.actions.append(action)
 
     async def loop(self):
         while True:
+            updated_actions = []
+            for action in self.actions:
+                try:
+                    response = await self.process_action(action)
+                    if response[0] == DONE:
+                        continue
+                    if response[0] == CONTINUE:
+                        updated_actions.append(response[1])
+                    if response[0] == CLEAR_ACTIONS:
+                        updated_actions = []
+                        break
+                except Exception as e:
+                    print("Loop Error: ", e)
+            self.actions = updated_actions
+            self.show()
             await asyncio.sleep(0)
 
-    def fill(self, color):
-        print("FILL: ", color)
-        for i in self.pixels:
-            self.pixels[i]["instance"].fill(color)
-            self.pixels[i]["instance"].show()
-            self.pixels[i]["values"] = [color] * MAX_PIXELS
+    async def process_action(self, action):
+        if action["action"] == "fill":
+            await self.fill_all(color=action["color"], show=False)
+            return (DONE, action)
+            return (CONTINUE, action)
+        if action["action"] == "set":
+            await self.fill_all(color=action["color"], show=False)
+            return (CLEAR_ACTIONS, True)
 
-    def fade(self, color):
+    async def fill_all(self, color, show=True):
+        for i in self.pixels:
+            await self.pixels[i]["instance"].fill(color)
+            self.pixels[i]["values"] = [color] * MAX_PIXELS
+            if show:
+                await self.pixels[i]["instance"].show()
+
+    async def fill(self, color):
         pass
+
+    async def show(self):
+        for i in self.pixels:
+            if self.pixels[i]["changed"]:
+                await self.pixels[i]["instance"].show()
+                del self.pixels[i]["changed"]
 
     # Fade
     # Fill Segment
@@ -104,13 +142,36 @@ class ControlServer:
             },
         )
 
-    def change(self, request):
-        data = request.json()
-
+    async def change(self, request):
+        # """
+        data = {
+            "actions": [
+                {
+                    "action": "fill",
+                    "line": 1,
+                    "start": 0,
+                    "end": 2,
+                    "color": (255, 0, 0),
+                },
+                {
+                    "action": "fill",
+                    "line": 1,
+                    "start": 4,
+                    "end": 6,
+                    "color": (255, 0, 0),
+                },
+            ],
+        }
+        # """
+        # data = request.json()
+        # decode json
+        if "actions" in data:
+            for action in data["actions"]:
+                await self.control.add_action(action)
         return JSONResponse(request, {"response": "ok"})
 
-    def clear(self, request):
-        self.control.fill(EMPTY)
+    async def clear(self, request):
+        await self.control.fill(EMPTY)
         return JSONResponse(request, {"response": "ok"})
 
     def update(self, request):
