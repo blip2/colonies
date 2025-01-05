@@ -90,12 +90,7 @@ export default {
       this.socket.emit("state", state);
     },
     setAll() {
-      this.segments.forEach((seg) => {
-        if (!seg.type.includes("block")) {
-          seg.color = this.color;
-          this.socket.emit("segment-change", seg);
-        }
-      });
+      this.socket.emit("segment-change-all", this.color);
     },
     clearAll() {
       this.socket.emit("reset");

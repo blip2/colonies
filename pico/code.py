@@ -18,7 +18,7 @@ from adafruit_wiznet5k.adafruit_wiznet5k import WIZNET5K
 from adafruit_httpserver import Server, JSONResponse, Response, Route, GET, POST
 
 animation_steps = 20
-animation_mult = 0.05
+animation_mult = 0.01
 
 # Init Networking
 cs = digitalio.DigitalInOut(board.GP17)
@@ -63,53 +63,55 @@ class LEDControl:
             self.pixels[i]["values"] = [(0, 0, 0)] * MAX_PIXELS
         self.fill_all(EMPTY)
 
-    async def add_action(self, action):
-        await self.actions.append(action)
+    def add_action(self, action):
+        print("adding action: ", action)
+        self.actions.append(action)
 
     async def loop(self):
         while True:
             updated_actions = []
             for action in self.actions:
-                try:
-                    response = await self.process_action(action)
-                    if response[0] == DONE:
-                        continue
-                    if response[0] == CONTINUE:
-                        updated_actions.append(response[1])
-                    if response[0] == CLEAR_ACTIONS:
-                        updated_actions = []
-                        break
-                except Exception as e:
-                    print("Loop Error: ", e)
+                # try:
+                response = await self.process_action(action)
+                if response[0] == DONE:
+                    continue
+                if response[0] == CONTINUE:
+                    updated_actions.append(response[1])
+                if response[0] == CLEAR_ACTIONS:
+                    updated_actions = []
+                    break
+                # except Exception as e:
+                #    print("Loop Error: ", e)
             self.actions = updated_actions
             self.show()
             await asyncio.sleep(animation_mult)
 
     async def process_action(self, action):
+        print("processing action: ", action)
         if action["action"] == "fill":
-            response = await self.fill_inc(action=action, show=False)
+            response = await self.fill_inc(action=action)
             if response:
                 return (CONTINUE, response)
             else:
                 return (DONE, None)
         if action["action"] == "setall":
-            await self.fill_all(color=action["color"], show=False)
+            await self.fill_all(color=action["color"])
             return (CLEAR_ACTIONS, True)
 
-    async def fill_all(self, color, show=True):
+    async def fill_all(self, color, show=False):
         for i in self.pixels:
-            await self.pixels[i]["instance"].fill(color)
+            self.pixels[i]["instance"].fill(color)
             self.pixels[i]["values"] = [color] * MAX_PIXELS
             if show:
                 await self.pixels[i]["instance"].show()
 
-    async def fill_inc(self, action):
+    async def fill_inc(self, action, show=False):
         if "count" not in action:
             action["count"] = 0
 
-        with self.pixels[action["strip"]]["instance"] as pixels:
             pixel = action["start"] + action["count"]
-            pixels[pixel] = action["color"]
+            self.pixels[action["strip"]]["instance"][pixel] = action["color"]
+            self.pixels[action["strip"]]["changed"] = True
 
         action["count"] += 1
         if action["count"] > int(action["end"] - action["start"]):
@@ -119,6 +121,7 @@ class LEDControl:
     async def show(self):
         for i in self.pixels:
             if self.pixels[i]["changed"]:
+                print("showing: ", i)
                 await self.pixels[i]["instance"].show()
                 del self.pixels[i]["changed"]
 
@@ -139,14 +142,17 @@ class ControlServer:
             [
                 Route("/", GET, self.hello),
                 Route("/change", POST, self.change),
-                Route("/clear", POST, self.clear),
+                Route("/test", GET, self.test),
+                Route("/clear", GET, self.clear),
                 Route("/update", [GET, POST], self.update),
             ]
         )
 
         self.server.start(self.eth.pretty_ip(self.eth.ip_address), port=HTTP_PORT)
 
-        print(f"Started server on: {self.eth.pretty_ip(self.eth.ip_address)}:{HTTP_PORT}" )
+        print(
+            f"Started server on: {self.eth.pretty_ip(self.eth.ip_address)}:{HTTP_PORT}"
+        )
 
     def hello(self, request):
         return JSONResponse(
@@ -159,36 +165,36 @@ class ControlServer:
             },
         )
 
-    async def change(self, request):
-        # """
+    def test(self, request):
         data = {
             "actions": [
                 {
-                    "action": "setall",
-                    "color": (255, 0, 0),
-                },
-                {
                     "action": "fill",
                     "strip": 1,
-                    "start": 4,
-                    "end": 6,
+                    "start": 0,
+                    "end": 32,
                     "color": (255, 0, 0),
                 },
             ],
         }
-        # """
-        # data = request.json()
-        # decode json
         if "actions" in data:
             for action in data["actions"]:
                 if self.validate_action(action):
-                    await self.control.add_action(action)
+                    self.control.add_action(action)
+        return JSONResponse(request, {"response": "ok"})
+
+    def change(self, request):
+        data = request.json()
+        if "actions" in data:
+            for action in data["actions"]:
+                if self.validate_action(action):
+                    self.control.add_action(action)
                 else:
                     return JSONResponse(request, {"error": "data parse error"})
         return JSONResponse(request, {"response": "ok"})
 
-    async def clear(self, request):
-        await self.control.fill(EMPTY)
+    def clear(self, request):
+        self.control.fill_all(EMPTY, show=True)
         return JSONResponse(request, {"response": "ok"})
 
     def validate_action(self, action):
@@ -228,7 +234,7 @@ class ControlServer:
     async def loop(self):
         while True:
             self.server.poll()
-            await asyncio.sleep(0)
+            await asyncio.sleep(1)
 
 
 async def blink(pin):
@@ -244,14 +250,15 @@ async def blink(pin):
 async def main():
     control = LEDControl()
     while True:
-        try:
-            server = ControlServer(control)
-            server_task = asyncio.create_task(server.loop())
-            led_control = asyncio.create_task(control.loop())
-            led_task = asyncio.create_task(blink(board.GP25))
-            await asyncio.gather(server_task, led_control, led_task)
-        except Exception as e:
-            print("Main Error: ", e)
-            supervisor.reload()
+        # try:
+        server = ControlServer(control)
+        server_task = asyncio.create_task(server.loop())
+        led_control = asyncio.create_task(control.loop())
+        led_task = asyncio.create_task(blink(board.GP25))
+        await asyncio.gather(server_task, led_control, led_task)
+        # except Exception as e:
+        #    print("Main Error: ", e)
+        #    supervisor.reload()
+
 
 asyncio.run(main())

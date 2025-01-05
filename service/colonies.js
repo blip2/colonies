@@ -47,6 +47,15 @@ io.on("connection", function (socket) {
     }
   });
 
+  socket.on("segment-change-all", function (color) {
+    manual_change = new Date();
+    if (state == "Off") {
+      state = "Creative";
+    }
+    segments.segment_change_all(color);
+    io.emit("segments", segments.all_segments());
+  });
+
   socket.on("state", function (new_state) {
     console.log("state is now " + new_state);
     state = new_state;

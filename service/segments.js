@@ -4,16 +4,19 @@
 var axios = require("axios");
 var hardware = require("./hardware");
 var segments = [];
-var colors = {
-  "#FF0000": { h: 0, s: 255, v: 225 },
-  "#FFFF66": { h: 30, s: 255, v: 225 },
-  "#66FF33": { h: 80, s: 255, v: 225 },
-  "#00FFFF": { h: 110, s: 255, v: 225 },
-  "#0000FF": { h: 150, s: 255, v: 225 },
-  "#FF00AA": { h: 220, s: 255, v: 225 },
-  "#CCCCCC": { h: 0, s: 0, v: 225 },
-  "#333333": { h: 0, s: 0, v: 0 },
-};
+
+var colors = ["#FF0000", "#FFFF66", "#66FF33", "#00FFFF", "#0000FF", "#FF00AA", "#CCCCCC", "#333333",];
+
+
+function hexToTuple(str) {
+  if (/^#([0-9a-f]{3}|[0-9a-f]{6})$/ig.test(str)) {
+    var hex = str.substr(1);
+    hex = hex.length == 3 ? hex.replace(/(.)/g, '$1$1') : hex;
+    var rgb = parseInt(hex, 16);
+    return [(rgb >> 16) & 255, (rgb >> 8) & 255, rgb & 255];
+  }
+  return [0, 0, 0];
+}
 
 function Segment(id, row, col, type, color) {
   this.id = id;
@@ -81,14 +84,23 @@ function segment_change(segment) {
   return segment;
 }
 
+function segment_change_all(color) {
+  set_all(color);
+  return segments.map(function (obj) {
+    if (["horiz", "vert"].includes(obj.type)) {
+      obj["color"] = color;
+    }
+    return obj;
+  });
+}
+
 function random_change() {
   segment_list = segments.filter(function (seg) {
     return seg.type == "horiz" || seg.type == "vert";
   });
   segment = segment_list[Math.floor(Math.random() * segment_list.length)];
   if (segment) {
-    var keys = Object.keys(colors);
-    segment.color = keys[Math.floor(Math.random() * keys.length)];
+    segment.color = colors[Math.floor(Math.random() * colors.length)];
     update_segment(segment);
     segments = segments.filter(function (obj) {
       return obj.id !== segment.id;
@@ -112,48 +124,47 @@ const handle_errors = (promise) => {
 };
 
 function update_segment(segment) {
-  // console.log(segment)
   var hw = hardware.SEGMENTS.filter(function (seg) {
     return seg.row == segment.row && seg.col == segment.col;
   })[0];
   if (hw) {
-    if (segment.color) {
-      var hsv = colors[segment.color];
-      var url =
-        "http://" +
-        hw.ip +
-        "/arduino/segment/" +
-        hw.strip +
-        "/" +
-        hw.seq +
-        "/" +
-        parseInt(hsv["h"]) +
-        "/" +
-        parseInt(hsv["s"]) +
-        "/" +
-        parseInt(hsv["v"]) +
-        "/0/";
-    } else {
-      var url =
-        "http://" +
-        hw.ip +
-        "/arduino/segment/" +
-        hw.strip +
-        "/" +
-        hw.seq +
-        "/0/0/0/0/";
+    var data = {
+      "actions": [
+        {
+          "action": "fill",
+          "strip": hw.strip,
+          "start": hw.start,
+          "end": hw.end,
+          "color": hexToTuple(segment.color),
+        },
+      ],
     }
-    handle_errors(api().get(url));
+    handle_errors(api().post(`http://${hw.ip}}/change`, data));
   }
+}
+
+function set_all(color) {
+  hardware.CONTROLLERS.forEach(function (ip) {
+    var data = {
+      "actions": [
+        {
+          "action": "setall",
+          "color": hexToTuple(color),
+        },
+      ],
+    }
+    handle_errors(api().post(`http://${ip}}/change`, data));
+  });
 }
 
 function reset_all() {
   hardware.CONTROLLERS.forEach(function (ip) {
-    var url = "http://" + ip + "/arduino/off/0";
+    var url = "http://" + ip + "/clear";
     handle_errors(api().get(url));
   });
 }
 
 exports.all_segments = all_segments;
 exports.segment_change = segment_change;
+exports.segment_change_all = segment_change_all;
 exports.random_change = random_change;
