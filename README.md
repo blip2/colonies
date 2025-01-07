@@ -27,12 +27,14 @@ The lighting will turn off automatically outside of 9am to 11pm weekdays or 20 m
 The six WIZnet W5500-EVB-Pico2 with PoE modules and a wired ethernet connection to an 8-port switch which is connected directly to the headend server. There is a network port at high level on the cable basket next to the installation which connects directly to the wall port in the office.
 
 The six controllers are configured as follows (wired MAC, wired IP assigned by DHCP):
-- Colonies0 - B4218AF06D0B - 192.168.10.100
-- Colonies1 - B4218AF069F6 - 192.168.10.101
-- Colonies2 - B4218AF069F4 - 192.168.10.102
-- Colonies3 - B4218AF06C00 - 192.168.10.103
-- Colonies4 - B4218AF06D1C - 192.168.10.104
-- Colonies5 - B4218AF06D14 - 192.168.10.105
+- Colonies0 - 00:08:DC:8c:72:eb - 192.168.10.100
+- Colonies1 - 00:08:DC:6c:d8:d5 - 192.168.10.101
+- Colonies2 - 00:08:DC:aa:4d:56 - 192.168.10.102
+- Colonies3 - 00:08:DC:79:7d:67 - 192.168.10.103
+- Colonies4 - 00:08:DC:69:c6:9b - 192.168.10.104
+- Colonies5 - 00:08:DC:85:74:33 - 192.168.10.105
+- Colonies6 - 00:08:DC:d2:6f:8d - 192.168.10.106 (spare)
+- Test Unit - 00:08:DC:37:73:c6 - 192.168.10.110 (test)
 
 The server runs on a RaspberryPi 4 running Raspbian which is connected to the office wall port. The server also connects to the Bradfield Centre wireless network with a fixed IP to allow users to interact with the installation.
 

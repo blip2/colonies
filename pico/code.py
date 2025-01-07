@@ -71,17 +71,17 @@ class LEDControl:
         while True:
             updated_actions = []
             for action in self.actions:
-                # try:
-                response = await self.process_action(action)
-                if response[0] == DONE:
-                    continue
-                if response[0] == CONTINUE:
-                    updated_actions.append(response[1])
-                if response[0] == CLEAR_ACTIONS:
-                    updated_actions = []
-                    break
-                # except Exception as e:
-                #    print("Loop Error: ", e)
+                try:
+                    response = await self.process_action(action)
+                    if response[0] == DONE:
+                        continue
+                    if response[0] == CONTINUE:
+                        updated_actions.append(response[1])
+                    if response[0] == CLEAR_ACTIONS:
+                        updated_actions = []
+                        break
+                except Exception as e:
+                    print("Loop Error: ", e)
             self.actions = updated_actions
             self.show()
             await asyncio.sleep(animation_mult)
@@ -125,16 +125,14 @@ class LEDControl:
                 await self.pixels[i]["instance"].show()
                 del self.pixels[i]["changed"]
 
-    # Fade
-    # Fill Segment
-    # Test Sequence
-
 
 class ControlServer:
     def __init__(self, control):
         self.control = control
 
-        self.eth = WIZNET5K(spi_bus, cs)
+        mac = "00:08:DC:" + ":".join([microcontroller.cpu.uid.hex()[-8+(i*2):-6+(i*2)] for i in range(3)])
+        print("mac:", mac)
+        self.eth = WIZNET5K(spi_bus, cs, mac=mac)
         pool = adafruit_connection_manager.get_radio_socketpool(self.eth)
         self.server = Server(pool)
 
@@ -145,6 +143,7 @@ class ControlServer:
                 Route("/test", GET, self.test),
                 Route("/clear", GET, self.clear),
                 Route("/update", [GET, POST], self.update),
+                Route("/reset", GET, self.reset),
             ]
         )
 
@@ -160,6 +159,7 @@ class ControlServer:
             {
                 "readonly": READONLY,
                 "chip": self.eth.chip,
+                "uid": microcontroller.cpu.uid.hex(),
                 "mac": self.eth.pretty_mac(self.eth.mac_address),
                 "ip": self.eth.pretty_ip(self.eth.ip_address),
             },
@@ -175,6 +175,10 @@ class ControlServer:
                     "end": 32,
                     "color": (255, 0, 0),
                 },
+                # {
+                #    "action": "setall",
+                #    "color": (255, 0, 0),
+                # },
             ],
         }
         if "actions" in data:
@@ -195,6 +199,10 @@ class ControlServer:
 
     def clear(self, request):
         self.control.fill_all(EMPTY, show=True)
+        return JSONResponse(request, {"response": "ok"})
+
+    def reset(self, request):
+        microcontroller.reset()
         return JSONResponse(request, {"response": "ok"})
 
     def validate_action(self, action):
@@ -250,15 +258,15 @@ async def blink(pin):
 async def main():
     control = LEDControl()
     while True:
-        # try:
-        server = ControlServer(control)
-        server_task = asyncio.create_task(server.loop())
-        led_control = asyncio.create_task(control.loop())
-        led_task = asyncio.create_task(blink(board.GP25))
-        await asyncio.gather(server_task, led_control, led_task)
-        # except Exception as e:
-        #    print("Main Error: ", e)
-        #    supervisor.reload()
+        try:
+            server = ControlServer(control)
+            server_task = asyncio.create_task(server.loop())
+            led_control = asyncio.create_task(control.loop())
+            led_task = asyncio.create_task(blink(board.GP25))
+            await asyncio.gather(server_task, led_control, led_task)
+        except Exception as e:
+            print("Main Error: ", e)
+            supervisor.reload()
 
 
 asyncio.run(main())
