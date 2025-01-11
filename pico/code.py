@@ -64,7 +64,6 @@ class LEDControl:
         self.fill_all(EMPTY)
 
     def add_action(self, action):
-        print("adding action: ", action)
         self.actions.append(action)
 
     async def loop(self):
@@ -87,7 +86,6 @@ class LEDControl:
             await asyncio.sleep(animation_mult)
 
     async def process_action(self, action):
-        print("processing action: ", action)
         if action["action"] == "fill":
             response = await self.fill_inc(action=action)
             if response:
@@ -121,7 +119,6 @@ class LEDControl:
     async def show(self):
         for i in self.pixels:
             if self.pixels[i]["changed"]:
-                print("showing: ", i)
                 await self.pixels[i]["instance"].show()
                 del self.pixels[i]["changed"]
 
@@ -131,7 +128,6 @@ class ControlServer:
         self.control = control
 
         mac = "00:08:DC:" + ":".join([microcontroller.cpu.uid.hex()[-8+(i*2):-6+(i*2)] for i in range(3)])
-        print("mac:", mac)
         self.eth = WIZNET5K(spi_bus, cs, mac=mac)
         pool = adafruit_connection_manager.get_radio_socketpool(self.eth)
         self.server = Server(pool)
