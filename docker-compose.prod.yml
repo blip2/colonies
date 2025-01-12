@@ -1,6 +1,9 @@
 services:
   service:
-    image: ghcr.io/blip2/colonies:latest
+    build:
+      context: .
+      target: web
+    #image: ghcr.io/blip2/colonies:latest
     command: node colonies
     restart: always
     ports:
