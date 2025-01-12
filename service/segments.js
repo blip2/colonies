@@ -113,13 +113,13 @@ function random_change() {
 
 const api = () => {
   return axios.create({
-    timeout: 1000,
+    timeout: 2000,
   });
 };
 
 const handle_errors = (promise) => {
   return promise.catch((error) => {
-    //console.log("Error Communicating with Arduino: ", error.message);
+    console.log("Axios Error: ", error.message);
   });
 };
 
@@ -139,7 +139,8 @@ function update_segment(segment) {
         },
       ],
     }
-    handle_errors(api().post(`http://${hw.ip}}/change`, data));
+    console.log('update', hw.ip, data)
+    handle_errors(api().post(`http://${hw.ip}/change`, data));
   }
 }
 
@@ -153,14 +154,13 @@ function set_all(color) {
         },
       ],
     }
-    handle_errors(api().post(`http://${ip}}/change`, data));
+    handle_errors(api().post(`http://${ip}/change`, data));
   });
 }
 
 function reset_all() {
   hardware.CONTROLLERS.forEach(function (ip) {
-    var url = "http://" + ip + "/clear";
-    handle_errors(api().get(url));
+    handle_errors(api().get(`http://${ip}/clear`));
   });
 }
 
