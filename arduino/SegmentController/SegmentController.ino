@@ -55,13 +55,13 @@ CRGB leds[NUM_STRIPS][NUM_LEDS];
 /* X indicates physical problem
  *     0  1  2  3  4  5  6  7  8  9 10 11 12 13 14
  * l 0 o --- o --- o --- o --- o XXX o XXX o XXX o (1) r
- *   1 X     |     |     |     |     |     |     |
- *   2 o --- o --- o --- o --- o XXX o XXX o --- o (2)
- *   3 X     |     |     |     |     |     |     X
+ *   1 |     |     |     |     |     |     |     X
+ *   2 o --- o --- o --- o --- o XXX o XXX o XXX o (2)
+ *   3 |     |     |     |     |     |     |     X
  *   4 o --- o --- o --- o --- o --- o --- o --- o (3)
- *   5 X     |     |     |     |     |     |     X
+ *   5 |     |     |     |     |     |     |     X
  *   6 o --- o --- o --- o --- o --- o --- o --- o (4)
- *   7 X     |     |     |     |     |     |     X
+ *   7 |     |     |     |     |     |     |     X
  *   8 o --- o --- o --- o --- o --- o --- o --- o (5)
  *    (1)   (2)   (3)   (4)   (5)   (6)   (7)   (8)
  */
@@ -84,9 +84,9 @@ int seglen[][NUM_SEGMENTS] = {
 // 2.4 column 0  (1): //31+30+30+30 (checked)
 // 2.7 row    0l (1): //28+28+30+30 (updated 2023)
 // row 0l - third segment (col 5) missing due to failure - requires physical fix
-  {32,28,31,30},
-  {31,30,30,30},
-  {28,29,31,30},
+//  {32,28,31,30},
+//  {31,30,30,30},
+//  {28,29,31,30},
 
 // Yun 3: B4218AF069F4 (controller 2)
 // 3.2 column 6 (4):  //31+30+30+30 (checked)
@@ -98,11 +98,11 @@ int seglen[][NUM_SEGMENTS] = {
 
 // Yun 4: B4218AF06C00 (controller 3)
 // 4.2 column 12 (7):  31+30+30+30 (checked)
-// 4.5 column  8 (5):  31+30+30+30 (checked)
+// 4.5 column  8 (5):  31+30+30+30 (updated 2025)
 // 4.8 column 10 (6):  31+30+30+30 (updated 2023)
-//  {31,30,30,30},
-//  {31,30,30,30},
-//  {31,30,30,30},
+  {31,30,30,30},
+  {30,30,30,30},
+  {31,30,30,30},
 
 // Yun 5: B4218AF06D1C (controller 4)
 // 5.2 column 14 (8):  31+30+31+30 (updated 2023)
@@ -130,9 +130,9 @@ void setup() {
   FastLED.addLeds<LED_TYPE, 2, COLOR_ORDER>(leds[0], NUM_LEDS);
 //  FastLED.addLeds<LED_TYPE, 3>(leds[1], NUM_LEDS);
 //  FastLED.addLeds<LED_TYPE, 4>(leds[2], NUM_LEDS);
-  FastLED.addLeds<LED_TYPE, 4, COLOR_ORDER>(leds[1], NUM_LEDS);
+  FastLED.addLeds<LED_TYPE, 5, COLOR_ORDER>(leds[1], NUM_LEDS);
 //  FastLED.addLeds<LED_TYPE, 6>(leds[4], NUM_LEDS);
-  FastLED.addLeds<LED_TYPE, 7, COLOR_ORDER>(leds[2], NUM_LEDS);
+  FastLED.addLeds<LED_TYPE, 8, COLOR_ORDER>(leds[2], NUM_LEDS);
  // FastLED.addLeds<LED_TYPE, 8, COLOR_ORDER>(leds[2], NUM_LEDS);
 //  FastLED.addLeds<LED_TYPE, 9>(leds[7], NUM_LEDS);
   //FastLED.addLeds<LED_TYPE, 10>(leds[2], NUM_LEDS);

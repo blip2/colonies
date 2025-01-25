@@ -7,8 +7,8 @@ var CONTROLLERS = [
   "192.168.10.102",
   "192.168.10.103",
   "192.168.10.104",
-  "192.168.10.105",
   "192.168.10.106",
+  "192.168.10.105",
 ];
 
 // Segment map defined below according to this diagram
